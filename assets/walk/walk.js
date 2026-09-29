@@ -39,12 +39,19 @@
              onProgress(u), onLoad(fraction, ready), onGeometry(rect) } */
     const self = this;
     const canvas = o.canvas, ctx = canvas.getContext('2d', { alpha: false });
-    const DPR = Math.min(window.devicePixelRatio || 1, 1.5);   // taste-check §7: never raw DPR
+    // ?walktest=set:d,dpr:1.5,smooth:low,hold:0,blend:1 — switches for measuring on real hardware
+    const T = {}; (new URLSearchParams(location.search).get('walktest') || '').split(',').forEach(kv => { const [k, v] = kv.split(':'); if (k) T[k] = v; });
+    let DPR = Math.min(window.devicePixelRatio || 1, T.dpr ? +T.dpr : 1.5);   // taste-check §7: never raw DPR
     const OVERSCAN = 1.045;                                      // room for the look-around
     const LOOK = 0.012;                                          // max look-around, fraction of width
     let m = null, mode = o.mode || 'frames';
     let count = 0, lut = null, set = 'd', ext = 'avif';
     let blobs = [], bitmaps = new Map(), decoding = new Set(), stills = [];
+    // The hardware path: the walk as one all-keyframe H.264 file, decoded frame by frame on the GPU's
+    // video decoder through WebCodecs. An AVIF frame costs a laptop CPU 15-30 ms to decode, so a
+    // quick scroll outruns it; a hardware H.264 frame costs a few ms and never leaves the GPU.
+    let vid = null;          // { v: manifest entry, cfg, dec, buf, got, avail }
+    const hasData = i => i >= 0 && i < count && (vid ? i < vid.avail : !!blobs[i]);
     let target = 0, cur = 0, shown = -1, lastT = 0, running = false, inView = true, dir = 1, shownF = -1;
     let walkPx = 1, seenH = 0, seenW = 0, vhUsed = 0;
     let px = 0, py = 0, tx = 0, ty = 0;          // look-around: eased and target pointer
@@ -86,7 +93,7 @@
     };
     self.walkPx = () => walkPx;
     // for tests: is the frame under the playhead decoded, and which set is in use
-    self.debug = () => ({ set, want: frameAt(cur), shown: shownF, bitmaps: bitmaps.size });
+    self.debug = () => ({ set, path: vid ? 'hardware ' + vid.cfg.codec : 'avif', want: frameAt(cur), shown: shownF, bitmaps: bitmaps.size, loaded, count, dpr: DPR });
     self.manifest = () => m;
     // jump the playhead without scrolling (console / tests); decodes the window around it first
     self.seek = u => { target = cur = clamp(u, 0, 1); if (mode === 'frames') manageWindow(Math.round(frameAt(cur))); self.redraw(); };
@@ -136,6 +143,14 @@
       pump();
     }
     function decode(i) {
+      if (vid) {
+        if (!hasData(i) || bitmaps.has(i) || decoding.has(i) || decoding.size > 8 || !vid.dec || vid.dec.state !== 'configured') return;
+        decoding.add(i);
+        const v = vid.v;
+        try { vid.dec.decode(new EncodedVideoChunk({ type: 'key', timestamp: i, data: vid.buf.subarray(v.pos[i], v.pos[i] + v.size[i]) })); }
+        catch (e) { decoding.delete(i); toFrames(); }
+        return;
+      }
       if (!blobs[i] || bitmaps.has(i) || decoding.has(i) || decoding.size > 5) return;
       decoding.add(i);
       createImageBitmap(blobs[i]).then(bm => {
@@ -145,9 +160,10 @@
     // Decode far ahead in the direction of travel and a little behind, nearest first, so a quick
     // scroll finds its frames ready instead of stepping to whatever happens to be decoded.
     function manageWindow(center) {
-      for (let d = 0; d <= 20; d++) { decode(center + dir * d); if (d <= 8) decode(center - dir * d); }
-      if (bitmaps.size > 56) for (const [i, bm] of bitmaps) {
-        if (Math.abs(i - center) > 32 && i !== 0 && i !== count - 1) { bm.close && bm.close(); bitmaps.delete(i); }
+      const ahead = vid ? 10 : 20, behind = vid ? 4 : 8, cap = vid ? 20 : 56, far = vid ? 12 : 32;
+      for (let d = 0; d <= ahead; d++) { decode(center + dir * d); if (d <= behind) decode(center - dir * d); }
+      if (bitmaps.size > cap) for (const [i, bm] of bitmaps) {
+        if (Math.abs(i - center) > far && (vid || (i !== 0 && i !== count - 1))) { bm.close && bm.close(); bitmaps.delete(i); }
       }
     }
     function nearest(i) {
@@ -186,13 +202,13 @@
         else { b1 = null; exact = false; }
       }
       if (!b0) return false;
-      const iw = b0.width, ih = b0.height, g = coverRect(iw, ih);
+      const iw = b0.displayWidth || b0.width, ih = b0.displayHeight || b0.height, g = coverRect(iw, ih);
       const alpha = src ? a : blendA;
       ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-      ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';   // reset by every canvas resize
+      ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = T.smooth || 'high';   // reset by every canvas resize
       ctx.globalAlpha = 1;
       ctx.drawImage(b0, g.x, g.y, g.w, g.h);
-      if (exact && b1 && alpha > 0.004) { ctx.globalAlpha = alpha; ctx.drawImage(b1, g.x, g.y, g.w, g.h); ctx.globalAlpha = 1; }
+      if (exact && b1 && alpha > 0.004 && T.blend !== '0') { ctx.globalAlpha = alpha; ctx.drawImage(b1, g.x, g.y, g.w, g.h); ctx.globalAlpha = 1; }
       if (!geo || geo.x !== g.x || geo.y !== g.y || geo.w !== g.w || geo.h !== g.h) {
         geo = g; o.onGeometry && o.onGeometry(g);
       }
@@ -215,15 +231,15 @@
         px += (tx - px) * kl; py += (ty - py) * kl;
       }
       let f = frameAt(cur);
-      if (mode === 'frames' && shownF >= 0) {
+      if (mode === 'frames' && shownF >= 0 && T.hold !== '0') {
         // Never skip. A slow CPU decodes fewer frames a second than a quick scroll asks for; rather than
         // jump to whatever happens to be decoded, step through consecutive decoded frames from where we
         // are, so a fast flick trails for a moment and catches up instead of stuttering. A long jump
         // (the rail, a link to #counter) still goes straight there.
         const from = Math.floor(shownF), to = Math.floor(f);
         if (Math.abs(to - from) <= 48) {
-          if (to > from) { let k = from; while (k < to && bitmaps.has(k + 1)) k++; if (k < to) f = k; }
-          else if (to < from) { let k = from; while (k > to && bitmaps.has(k - 1)) k--; if (k > to) f = k; }
+          if (to > from) { let k = from; while (k < to && bitmaps.has(k + 1)) k++; if (k < to && hasData(k + 1)) f = k; }
+          else if (to < from) { let k = from; while (k > to && bitmaps.has(k - 1)) k--; if (k > to && hasData(k - 1)) f = k; }
         }
       }
       if (mode === 'frames') manageWindow(Math.round(f));
@@ -272,16 +288,68 @@
       }))).then(imgs => { stills = imgs.filter(Boolean); if (stills.length < 3) stills = [stills[0], stills[0], stills[0]].filter(Boolean); });
     }
 
-    self.ready = fetch(o.base + '/manifest.json').then(r => r.json()).then(async manifest => {
+    async function videoConfig(v) {
+      const description = Uint8Array.from(atob(v.avcc), c => c.charCodeAt(0));
+      for (const codec of [v.codec, v.codec.slice(0, 7) + '00' + v.codec.slice(9)]) {
+        const c = { codec, description, codedWidth: v.w, codedHeight: v.h, hardwareAcceleration: 'prefer-hardware', optimizeForLatency: true };
+        try { if ((await VideoDecoder.isConfigSupported(c)).supported) return c; } catch (e) {}
+      }
+      return null;
+    }
+    function startDecoder() {
+      vid.dec = new VideoDecoder({
+        output: fr => { const i = fr.timestamp; decoding.delete(i);
+          if (!vid || bitmaps.has(i)) { fr.close(); return; } bitmaps.set(i, fr); dirty = true; },
+        error: () => toFrames()
+      });
+      vid.dec.configure(vid.cfg);
+    }
+    // stream the file; every frame whose bytes have arrived can be decoded, so the walk starts at once
+    async function fetchVideo() {
+      const v = vid.v; vid.buf = new Uint8Array(v.bytes); vid.got = 0; vid.avail = 0;
+      startDecoder();
+      try {
+        const r = await fetch(o.base + '/' + v.src); if (!r.ok || !r.body) throw 0;
+        const reader = r.body.getReader();
+        for (;;) {
+          const { done, value } = await reader.read(); if (done) break;
+          if (!vid) return;
+          vid.buf.set(value, vid.got); vid.got += value.length;
+          let a = vid.avail; while (a < count && v.pos[a] + v.size[a] <= vid.got) a++;
+          if (a !== vid.avail) {
+            vid.avail = loaded = a; dirty = true;
+            if (!readyFired && a >= Math.min(count, 12)) { readyFired = true; o.onLoad && o.onLoad(a / count, true); }
+            else o.onLoad && o.onLoad(a / count, readyFired);
+            if (Math.abs(a - Math.round(frameAt(cur))) < 24) manageWindow(Math.round(frameAt(cur)));
+          }
+        }
+      } catch (e) { toFrames(); }
+    }
+    // anything goes wrong with the hardware path: drop to the AVIF frames, same pictures
+    function toFrames() {
+      if (!vid) return;
+      const d = vid.dec; vid = null;
+      try { d && d.state !== 'closed' && d.close(); } catch (e) {}
+      for (const [, bm] of bitmaps) bm.close && bm.close();
+      bitmaps.clear(); decoding.clear(); loaded = 0; readyFired = false; shownF = -1;
+      DPR = Math.min(window.devicePixelRatio || 1, T.dpr ? +T.dpr : 1.5); layout();
+      fetchAll();
+    }
+    self.ready = fetch(o.base + '/manifest.json', { cache: 'no-cache' }).then(r => r.json()).then(async manifest => {
       m = manifest; count = m.count; lut = m.lut; ext = m.ext || 'avif';
       // phones get 960px frames; laptops and desktops whose canvas is wider than the 1600px set get
       // the 1920px set when the walk has one (a Retina laptop otherwise upscales 1600px ~1.7x: soft)
       const cw = innerWidth * DPR;
-      set = cw <= 1100 ? 'm' : (cw > 1700 && m.sizes && m.sizes.h ? 'h' : 'd');
-      if (mode === 'frames' && !(await supportsAvif())) mode = 'stills';
+      set = T.set || (cw <= 1100 ? 'm' : (cw > 1700 && m.sizes && m.sizes.h ? 'h' : 'd'));
+      if (mode === 'frames' && m.video && T.codec !== '0' && window.VideoDecoder && window.EncodedVideoChunk) {
+        const v = set === 'm' ? m.video.sd : m.video.hd, cfg = await videoConfig(v);
+        if (cfg) vid = { v, cfg };   // measured on an Intel Iris laptop: DPR 2 drops to 43 fps, 1.5 holds 60
+      }
+      if (mode === 'frames' && !vid && !(await supportsAvif())) mode = 'stills';
       layout();
       target = cur = scrollProgress();
       if (mode === 'stills') { await loadStills(); o.onLoad && o.onLoad(1, true); }
+      else if (vid) fetchVideo();
       else fetchAll();
       self.redraw(); start();
       return mode;
