@@ -3,6 +3,8 @@
 /*
 !/.gitignore
 !/.github/
+!/.nojekyll
+!/index.html
 !/experience.html
 !/patients.html
 !/cultivar.html

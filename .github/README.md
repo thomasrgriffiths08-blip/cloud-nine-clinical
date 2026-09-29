@@ -12,7 +12,11 @@ cultivar, with "View more" for the full page.
 | `admin.html` | Add, edit or remove cultivars and assign them to jars (local server only) |
 | `patients.html` | The demo patient sign-in |
 
-## Run it
+## Live demo
+
+https://thomasrgriffiths08-blip.github.io/cloud-nine-clinical/ (GitHub Pages; read-only, the admin cannot save there)
+
+## Run it locally
 
 ```bash
 python3 shoot/serve.py
