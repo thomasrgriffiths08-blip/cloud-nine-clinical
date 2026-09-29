@@ -1,0 +1,27 @@
+# This repository is the website only. The shoot (raw takes, stills, masters: ~1.3 GB), the lab and
+# the history stay on the local machine. Whitelist: ignore everything, then allow the site back in.
+/*
+!/.gitignore
+!/.github/
+!/experience.html
+!/patients.html
+!/cultivar.html
+!/cultivars.html
+!/admin.html
+!/COMPLIANCE-AND-EVIDENCE.md
+!/data/
+/data/products.backup.json
+!/assets/
+/assets/*
+!/assets/site.css
+!/assets/products/
+!/assets/walk/
+/assets/walk/*
+!/assets/walk/walk.js
+!/assets/walk/store/
+!/assets/walk/outside/
+!/assets/walk/inside/
+!/shoot/
+/shoot/*
+!/shoot/serve.py
+.DS_Store

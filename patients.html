@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Patient area — Cloud Nine Clinical</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#16181A">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,300..600&family=Fragment+Mono&display=swap">
+<link rel="stylesheet" href="assets/site.css?v=20260929f">
+<style>
+  /* WHY THIS IS A SEPARATE, SIGNED-IN PAGE: the medicine may not be shown or named to the public
+     (Human Medicines Regulations 2012 regs 279/284; CAP Code 12.12). Existing patients, signed in,
+     may see what they have been prescribed. In production the gate below is the clinic's real
+     patient portal ({{PATIENT_PORTAL}}); the "demonstration" button exists only for the pitch. */
+  .gate { position: relative; min-height: 100svh; display: grid; place-items: end start; color: var(--on-dark); background: var(--timber); }
+  .gate img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .gate::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, color-mix(in srgb, var(--timber) 88%, transparent), color-mix(in srgb, var(--timber) 30%, transparent) 60%); }
+  .gate .card { position: relative; z-index: 2; margin: 0 var(--gutter) clamp(64px, 12vh, 120px); max-width: 520px; }
+  .gate .card h1 { margin-top: 16px; }
+  .gate .card p { margin-top: 18px; color: var(--on-dark-soft); }
+  .gate .card .acts { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+  .gate .card .btn.line { color: var(--overcast); }
+  .gate .label { color: var(--on-dark-soft); }
+
+  .hs { position: absolute; transform: translate(-50%, -50%); width: 14px; height: 14px; border-radius: 50%; padding: 0; cursor: pointer;
+        border: 1px solid rgba(231,233,232,.92); background: rgba(231,233,232,.3); opacity: 0; pointer-events: none; transition: opacity .6s ease; }
+  .hs::before { content: ""; position: absolute; inset: -15px; border-radius: 50%; }
+  .hs::after { content: ""; position: absolute; inset: -6px; border-radius: 50%; border: 1px solid rgba(231,233,232,.5); pointer-events: none; }
+  @media (prefers-reduced-motion: no-preference) { .hs::after { animation: ring 2.8s ease-out infinite; } }
+  @keyframes ring { 0% { transform: scale(.6); opacity: .9 } 70% { transform: scale(1.3); opacity: 0 } 100% { opacity: 0 } }
+  .stage.live .hs { opacity: 1; pointer-events: auto; }
+  .hs span { position: absolute; left: 22px; top: 50%; transform: translateY(-50%); white-space: nowrap; pointer-events: none;
+             font: 400 11px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--timber);
+             background: var(--overcast); padding: 8px 10px; opacity: 0; transition: opacity .2s ease; }
+  .hs:hover span, .hs:focus-visible span { opacity: 1; }
+  .hs[data-p="jar1"] { left: 10%; top: 50%; }
+  .hs[data-p="jar2"] { left: 15%; top: 50%; }
+  .hs[data-p="jar3"] { left: 43%; top: 46%; }
+  /* crop follows ASPECT, not width: narrow viewports lose the outer jars, so re-aim inside the band */
+  @media (max-aspect-ratio: 7/5) {
+    .hs[data-p="jar1"] { left: 49%; top: 46%; }
+    .hs[data-p="jar2"] { left: 41%; top: 46%; }
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="bar solid" id="bar">
+  <a class="mark" href="experience.html" aria-label="Cloud Nine Clinical, home">CLOUD NINE<span>Patients</span></a>
+  <nav aria-label="Main">
+    <a class="hide-sm" href="experience.html#consultation">Consultation</a>
+    <a class="hide-sm" href="experience.html#information">The clinic</a>
+    <a class="btn" href="{{BOOKING_URL}}"><span class="long">Request a consultation</span><span class="short">Enquire</span></a>
+  </nav>
+</header>
+
+<main id="main">
+  <section class="gate" id="gate" aria-label="Sign in">
+    <img src="assets/walk/inside/still/000.jpg" alt="" fetchpriority="high">
+    <div class="card">
+      <p class="label">Patient area</p>
+      <h1 class="d-l">Come in.</h1>
+      <p>This part of the clinic is for patients who have seen one of our specialists. Sign in with the details in your welcome email.</p>
+      <div class="acts">
+        <a class="btn light" href="{{PATIENT_PORTAL}}">Sign in <span class="arr">→</span></a>
+        <button type="button" class="btn line" id="demo">Enter the demonstration</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="runway" id="runway" aria-label="Inside the clinic" hidden>
+    <div class="stage" id="stage">
+      <div class="poster" aria-hidden="true"><img src="assets/walk/inside/still/000.jpg" alt=""></div>
+      <canvas id="walk" aria-hidden="true"></canvas>
+      <div class="frame" id="frame">
+        <button class="hs" data-p="jar1"><span>{{JAR_1_NAME}}</span></button>
+        <button class="hs" data-p="jar2"><span>{{JAR_2_NAME}}</span></button>
+        <button class="hs" data-p="jar3"><span>{{JAR_3_NAME}}</span></button>
+      </div>
+      <div class="beat b-open" data-from="-1" data-to="0.2" style="opacity:1;visibility:visible">
+        <p class="label">Inside</p>
+        <h2 class="d-l">Your prescription,<br>explained.</h2>
+      </div>
+      <div class="beat b-arrive" data-from="0.9" data-to="9">
+        <p class="label">The counter</p>
+        <h2 class="d-l">Every jar has a story.</h2>
+        <p class="sub">Click any jar to read what it is, and how it was prescribed.</p>
+      </div>
+      <div class="hud">
+        <p class="status" id="status"><span class="txt">Loading</span><span class="load"></span></p>
+        <button type="button" class="motion" id="motion" aria-pressed="false">Reduce motion</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="backdrop" id="backdrop" hidden></div>
+<aside class="panel" id="panel" aria-label="Detail" aria-hidden="true">
+  <button class="x" id="close" aria-label="Close">×</button>
+  <p class="label" id="p-kicker"></p>
+  <h2 class="d-m" id="p-title"></h2>
+  <p id="p-body"></p>
+  <p class="note">Dispensed only against a prescription written for you after a consultation; nothing on this shelf is sold over the counter.</p>
+</aside>
+
+<script src="assets/walk/walk.js?v=20260929f"></script>
+<script>
+(function () {
+  'use strict';
+  const $ = s => document.querySelector(s);
+  const gate = $('#gate'), runway = $('#runway'), stage = $('#stage'), frame = $('#frame'), status = $('#status'), motionBtn = $('#motion');
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let pref = null; try { pref = localStorage.getItem('c9-motion'); } catch (e) {}
+  let mode = pref === 'off' ? 'stills' : 'frames';   // the walk plays by default; the switch reduces it
+  const moving = () => mode === 'frames';
+  const syncMotionUI = () => { motionBtn.textContent = moving() ? 'Reduce motion' : 'Play the walk'; motionBtn.setAttribute('aria-pressed', String(!moving())); };
+
+  let walk = null;
+  function enter() {
+    try { sessionStorage.setItem('c9-demo-patient', '1'); } catch (e) {}
+    gate.hidden = true; runway.hidden = false;
+    const beats = [...document.querySelectorAll('.beat')].map(el => ({ el, from: +el.dataset.from, to: +el.dataset.to }));
+    const FADE = 0.07, ease = t => t * t * (3 - 2 * t);
+    walk = new CloudNineWalk({
+      base: 'assets/walk/inside', runway, stage, canvas: $('#walk'), mode, pxPerFrame: 7, dwell: 0.9, lookAround: true,
+      onProgress(u) {
+        for (const b of beats) {
+          let o = 1;
+          if (u < b.from) o = 0; else if (u < b.from + FADE) o = ease((u - b.from) / FADE);
+          if (u > b.to) o = 0; else if (u > b.to - FADE) o = Math.min(o, ease((b.to - u) / FADE));
+          b.el.style.opacity = o.toFixed(3); b.el.style.visibility = o > 0.01 ? 'visible' : 'hidden';
+        }
+        stage.classList.toggle('live', u >= 0.985);
+        status.style.opacity = u > 0.03 ? '0' : '';
+      },
+      onLoad(frac, ready) {
+        status.style.setProperty('--loaded', Math.round(frac * 100) + '%');
+        if (ready) status.querySelector('.txt').textContent = 'Scroll to walk in';
+        if (frac >= 1) status.classList.add('done');
+      },
+      onGeometry(g) { Object.assign(frame.style, { left: g.x + 'px', top: g.y + 'px', width: g.w + 'px', height: g.h + 'px' }); stage.classList.add('drawn'); }
+    });
+    walk.ready.then(m => { mode = m; syncMotionUI(); });
+    syncMotionUI();
+    window.cloudNineWalk = walk;   // for the console: cloudNineWalk.seek(u)
+    window.scrollTo(0, 0);
+  }
+  $('#demo').addEventListener('click', enter);
+  let entered = false; try { entered = sessionStorage.getItem('c9-demo-patient') === '1'; } catch (e) {}
+  if (entered) enter();
+
+  motionBtn.addEventListener('click', () => {
+    mode = moving() ? 'stills' : 'frames';
+    try { localStorage.setItem('c9-motion', moving() ? 'on' : 'off'); } catch (e) {}
+    syncMotionUI(); walk && walk.setMode(mode);
+  });
+
+  /* the jars: each opens a panel; focus goes in and comes back to the jar that opened it */
+  const PRODUCTS = {
+    jar1: { kicker: 'On the counter', title: '{{JAR_1_NAME}}', body: '{{JAR_1_NOTE}}' },
+    jar2: { kicker: 'On the counter', title: '{{JAR_2_NAME}}', body: '{{JAR_2_NOTE}}' },
+    jar3: { kicker: 'On the counter', title: '{{JAR_3_NAME}}', body: '{{JAR_3_NOTE}}' }
+  };
+  const panel = $('#panel'), backdrop = $('#backdrop');
+  let opener = null;
+  function open(id, btn) {
+    const p = PRODUCTS[id]; if (!p) return;
+    $('#p-kicker').textContent = p.kicker; $('#p-title').textContent = p.title; $('#p-body').textContent = p.body;
+    backdrop.hidden = false; panel.classList.add('open'); panel.setAttribute('aria-hidden', 'false');
+    opener = btn; $('#close').focus();
+  }
+  function shut() {
+    panel.classList.remove('open'); panel.setAttribute('aria-hidden', 'true'); backdrop.hidden = true;
+    if (opener) opener.focus();
+  }
+  document.querySelectorAll('.hs').forEach(b => b.addEventListener('click', () => open(b.dataset.p, b)));
+  $('#close').addEventListener('click', shut); backdrop.addEventListener('click', shut);
+  addEventListener('keydown', e => { if (e.key === 'Escape' && panel.classList.contains('open')) shut(); });
+})();
+</script>
+</body>
+</html>

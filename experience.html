@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cloud Nine Clinical — a clinic in the trees</title>
+<meta name="description" content="A specialist clinic at the end of a footpath. Every visit begins with a consultation with a GMC-registered clinician. Registered with the Care Quality Commission.">
+<meta name="theme-color" content="#16181A">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,300..600&family=Fragment+Mono&display=swap">
+<link rel="stylesheet" href="assets/site.css?v=20260929l">
+<link rel="stylesheet" href="assets/products/products.css?v=2">
+<link rel="preload" as="fetch" href="assets/walk/store/manifest.json" crossorigin>
+<style>
+  .beat.b-open { opacity: 1; visibility: visible; }
+  .b-door { left: var(--gutter); bottom: calc(clamp(88px, 13vh, 150px) + var(--tb)); }
+  .b-door .d-xl { margin-top: 14px; }
+</style>
+</head>
+<body>
+<a class="skip" href="#consultation">Skip to the consultation</a>
+
+<header class="bar" id="bar">
+  <a class="mark" href="#top" aria-label="Cloud Nine Clinical, home">CLOUD NINE<span>Clinical</span></a>
+  <nav aria-label="Main">
+    <a class="hide-sm" href="#consultation">Consultation</a>
+    <a class="hide-sm" href="#information">The clinic</a>
+    <a href="patients.html"><span class="long">Patient sign-in</span><span class="short">Sign in</span></a>
+    <a class="btn" href="{{BOOKING_URL}}"><span class="long">Request a consultation</span><span class="short">Enquire</span></a>
+  </nav>
+</header>
+
+<main id="top">
+<!-- ======================================================================================
+     THE WALK. The scrollbar is the playhead: forest → the lodge → through the doors → the shop counter and its wall of jars.
+     477 frames drawn to the canvas by assets/walk/walk.js (not a <video>: video seeking stutters).
+
+     data-walk="full"     walks into the shop and parks on the jars. The pitch version.
+     data-walk="outside"  stops at the open door. The launch-safe version: UK law (HMR 2012 regs
+                          279/284, CAP 12.12) may not allow the medicine to be shown to the public;
+                          the client's lawyer decides, and this attribute is the whole switch.
+     ====================================================================================== -->
+<section class="runway" id="runway" data-walk="full" aria-label="The walk to the clinic">
+  <div class="stage" id="stage">
+    <div class="poster" aria-hidden="true">
+      <picture>
+        <source type="image/avif" media="(min-width: 761px)" srcset="assets/walk/store/d/000.avif">
+        <source type="image/avif" srcset="assets/walk/store/m/000.avif">
+        <img src="assets/walk/store/still/000.jpg" alt="" fetchpriority="high" decoding="async">
+      </picture>
+    </div>
+    <canvas id="walk" aria-hidden="true"></canvas>
+
+    <!-- picture coordinates: the renderer keeps .frame exactly on top of the drawn image -->
+    <div class="frame" id="frame">
+      <!-- the jars are built from data/products.json + the jar grid below: one marker per product on
+           the wall in the walk's last frame; clicking opens that cultivar's side panel -->
+      <a class="door only-outside" href="patients.html" aria-label="Patients: step inside"><span class="tag">Patients · step inside</span></a>
+    </div>
+
+    <div class="beat b-open" data-from="-1" data-to="0.14">
+      <p class="label">Care Quality Commission · {{CQC_NUMBER}}</p>
+      <h1 class="d-xl">A clinic<br>in the trees.</h1>
+      <p class="lede">Twenty minutes from {{TOWN}}, at the end of a footpath. Every visit begins with a conversation with a clinician, never with a counter.</p>
+      <a class="skipwalk" href="#consultation">Skip the walk ↓</a>
+    </div>
+
+    <div class="beat b-lodge" data-from="0.18" data-to="0.40">
+      <p class="d-l">Every visit starts with a consultation.</p>
+      <p class="label" style="margin-top:16px">Specialist clinicians · GMC registered</p>
+    </div>
+
+    <!-- placed on the door by script, from the manifest's door_u -->
+    <div class="beat b-door only-full" data-door="-0.05,0.075">
+      <p class="label">The door</p>
+      <p class="d-xl">Come in.</p>
+    </div>
+
+    <div class="beat b-arrive only-full" data-from="0.9" data-to="9">
+      <p class="label">The counter</p>
+      <h2 class="d-l">Every jar has a story.</h2>
+      <p class="sub"><span class="long">Click any jar to see it. Nothing here is sold over the counter.</span><span class="short">Tap a jar to see it. Nothing is sold over the counter.</span></p>
+      <div class="acts">
+        <a class="btn light" href="cultivars.html">All cultivars <span class="arr">→</span></a>
+        <a class="btn line" href="{{BOOKING_URL}}">Request a consultation</a>
+      </div>
+    </div>
+
+    <div class="beat b-arrive only-outside" data-from="0.9" data-to="9">
+      <p class="label">The door</p>
+      <h2 class="d-l">The door opens<br>by appointment.</h2>
+      <p class="sub">Nothing here is sold over the counter. Prescribed to you by name, or not at all.</p>
+      <div class="acts">
+        <a class="btn light" href="{{BOOKING_URL}}">Request a consultation <span class="arr">→</span></a>
+        <a class="btn line" href="patients.html">Patient sign-in</a>
+      </div>
+    </div>
+
+    <nav class="rail" id="rail" aria-label="Where you are on the walk">
+      <span class="track"></span><span class="fill"></span>
+      <button type="button" data-u="0"><span>The wood</span><i></i></button>
+      <button type="button" data-u="0.25"><span>The lodge</span><i></i></button>
+      <button type="button" data-u="1" data-door><span>The door</span><i></i></button>
+      <button type="button" data-u="1" class="only-full"><span>The counter</span><i></i></button>
+    </nav>
+
+    <div class="hud">
+      <p class="status" id="status"><span class="txt">Loading the walk</span><span class="load"></span></p>
+      <button type="button" class="motion" id="motion" aria-pressed="false">Reduce motion</button>
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================================================
+     THE REGISTER — what the law says must be clear and conspicuous, set as a title block.
+     CQC Regulation 20A: the rating widget must be displayed; its slot is the first cell.
+     ====================================================================================== -->
+<section class="register" id="register" aria-label="Registration">
+  <dl class="wrap titleblock">
+    <div class="cqc"><dt class="label">Care Quality Commission</dt><dd>{{CQC_RATING_WIDGET}} The official rating widget sits here, as Regulation 20A requires.</dd></div>
+    <div><dt class="label">Registration</dt><dd>{{CQC_NUMBER}}</dd></div>
+    <div><dt class="label">Overall rating</dt><dd>{{CQC_RATING}}</dd></div>
+    <div><dt class="label">Clinicians</dt><dd>GMC-registered specialists</dd></div>
+    <div><dt class="label">Prescriptions</dt><dd>After assessment, never over the counter</dd></div>
+  </dl>
+</section>
+
+<!-- ======================================================================================
+     THE CONSULTATION — four steps on a dimension line
+     ====================================================================================== -->
+<section class="sect consult" id="consultation">
+  <div class="wrap">
+    <div class="head reveal">
+      <div>
+        <p class="label"><span class="n">01</span> — What happens</p>
+        <h2 class="d-l">The consultation, step by step.</h2>
+      </div>
+      <div class="side">
+        <p>No forms to fight, no counter to reach. A conversation, a decision, and a plan written down.</p>
+        <a class="btn solid" href="{{BOOKING_URL}}">Request an initial consultation <span class="arr">→</span></a>
+        <p class="disclose">{{DISCLOSURE}} A consultation does not guarantee any particular treatment; that decision is made by a clinician, with you.</p>
+      </div>
+    </div>
+    <ol class="steps reveal">
+      <li><span class="num">I</span><h3>You get in touch.</h3><p>By phone or the form. We ask a few questions to make sure we are the right clinic for you.</p></li>
+      <li><span class="num">II</span><h3>The consultation.</h3><p>With a specialist. Your history, what you have tried, what you want to change.</p></li>
+      <li><span class="num">III</span><h3>A written plan.</h3><p>What was decided and why, in plain words, sent to you and, with your consent, your GP.</p></li>
+      <li><span class="num">IV</span><h3>Follow-up.</h3><p>Reviewed at {{REVIEW_INTERVAL}}. Adjusted if it needs to be. Stopped if it should be.</p></li>
+    </ol>
+  </div>
+</section>
+
+<!-- ======================================================================================
+     THE CLINIC, PLAINLY — a measured index
+     ====================================================================================== -->
+<section class="sect info" id="information">
+  <div class="wrap grid">
+    <div class="intro reveal">
+      <p class="label"><span class="n">02</span> — The clinic, plainly</p>
+      <h2 class="d-l">Everything you would want to ask.</h2>
+      <p>Plain answers, in one place. Where a line shows a bracketed field, it is waiting for the clinic's own detail.</p>
+    </div>
+    <div class="index reveal">
+      <details><summary><span class="k">A</span><span class="t">Who we see</span><span class="pm"></span></summary><div class="in">Adults referred by another clinician or coming to us directly, assessed by a specialist first. <b>{{ELIGIBILITY_NOTE}}</b></div></details>
+      <details><summary><span class="k">B</span><span class="t">Your first visit</span><span class="pm"></span></summary><div class="in">A consultation with a specialist clinician, usually <b>{{FIRST_APPT_LENGTH}}</b>. Bring what you have: records, letters, a list of what you take.</div></details>
+      <details><summary><span class="k">C</span><span class="t">Fees</span><span class="pm"></span></summary><div class="in">The initial consultation is <b>{{CONSULT_FEE}}</b>. Every fee is listed in full before you book, and there is nothing to buy on the day.</div></details>
+      <details><summary><span class="k">D</span><span class="t">Prescriptions</span><span class="pm"></span></summary><div class="in">Only after assessment, and only where a clinician judges it appropriate for you. <b>Nothing is sold over the counter.</b></div></details>
+      <details><summary><span class="k">E</span><span class="t">Where we are</span><span class="pm"></span></summary><div class="in"><b>{{ADDRESS}}</b>. The footpath starts at {{PATH_START}}; there is parking at {{PARKING}}.</div></details>
+      <details><summary><span class="k">F</span><span class="t">Regulation</span><span class="pm"></span></summary><div class="in">Registered with the Care Quality Commission, <b>{{CQC_NUMBER}}</b>. Our clinicians are registered with the General Medical Council.</div></details>
+      <details><summary><span class="k">G</span><span class="t">Your records</span><span class="pm"></span></summary><div class="in">Your notes are yours. <b>{{PRIVACY_LINE}}</b> You can ask for a copy at any time.</div></details>
+      <details><summary><span class="k">H</span><span class="t">Contact</span><span class="pm"></span></summary><div class="in"><b>{{PHONE}}</b> · {{EMAIL}} · {{HOURS}}</div></details>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="close reveal">
+      <h2 class="d-l">Start with a conversation.</h2>
+      <div>
+        <p>An initial consultation with a specialist. Every fee is listed in full before you book.</p>
+        <div class="acts">
+          <a class="btn light" href="{{BOOKING_URL}}">Request a consultation <span class="arr">→</span></a>
+          <a class="btn line" href="tel:{{PHONE}}">{{PHONE}}</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p class="word" aria-hidden="true">CLOUD NINE</p>
+  <div class="wrap legal">
+    <p>Cloud Nine Clinical Ltd · Company No. {{COMPANY_NO}} · Registered office {{REG_OFFICE}} · CQC {{CQC_NUMBER}}</p>
+    <nav aria-label="Policies"><a href="{{PRIVACY_URL}}">Privacy</a><a href="{{COMPLAINTS_URL}}">Complaints</a><a href="{{FEES_URL}}">Fees</a><a href="{{ACCESS_URL}}">Accessibility</a></nav>
+  </div>
+</footer>
+
+<script src="assets/walk/walk.js?v=20260929i"></script>
+<script src="assets/products/products.js?v=2"></script>
+<script>
+(function () {
+  'use strict';
+  const $ = s => document.querySelector(s);
+  const runway = $('#runway'), stage = $('#stage'), frame = $('#frame'), rail = $('#rail'), status = $('#status'), motionBtn = $('#motion');
+  const which = runway.dataset.walk === 'outside' ? 'outside' : 'full';
+  const shown = el => getComputedStyle(el).display !== 'none';
+  const beats = [...document.querySelectorAll('.beat')].filter(shown).map(el => ({ el, from: +el.dataset.from || 0, to: +el.dataset.to || 0 }));
+  const railBtns = [...rail.querySelectorAll('button')].filter(shown);
+
+  /* The walk plays for everyone by default — it is the site. Anyone who wants less movement presses
+     "Reduce motion": three photographs that hold and dissolve, no look-around, no pulses. Remembered. */
+  let pref = null; try { pref = localStorage.getItem('c9-motion'); } catch (e) {}
+  let mode = pref === 'off' ? 'stills' : 'frames';
+  const moving = () => mode === 'frames';
+  const syncMotionUI = () => {
+    motionBtn.textContent = moving() ? 'Reduce motion' : 'Play the walk';
+    motionBtn.setAttribute('aria-pressed', String(!moving()));
+    document.documentElement.classList.toggle('motion-off', !moving());
+    document.documentElement.classList.toggle('js-motion', moving());
+  };
+
+  const FADE = 0.06;
+  const ease = t => t * t * (3 - 2 * t);
+  let lastU = -1;
+  function onProgress(u) {
+    if (Math.abs(u - lastU) < 0.0003) return; lastU = u;
+    for (const b of beats) {
+      let o = 1;
+      if (u < b.from) o = 0; else if (u < b.from + FADE) o = ease((u - b.from) / FADE);
+      if (u > b.to) o = 0; else if (u > b.to - FADE) o = Math.min(o, ease((b.to - u) / FADE));
+      b.el.style.opacity = o.toFixed(3);
+      b.el.style.visibility = o > 0.01 ? 'visible' : 'hidden';
+      b.el.style.transform = moving() ? `translateY(${((1 - o) * 14).toFixed(1)}px)` : '';
+    }
+    stage.classList.toggle('live', u >= 0.985);
+    rail.style.setProperty('--p', u.toFixed(4));
+    let here = 0; railBtns.forEach((b, i) => { if (u + 0.04 >= +b.dataset.u) here = i; });
+    railBtns.forEach((b, i) => { b.classList.toggle('here', i === here); b.setAttribute('aria-current', i === here ? 'step' : 'false'); });
+    status.style.opacity = u > 0.03 ? '0' : '';
+  }
+
+  const walk = new CloudNineWalk({
+    base: 'assets/walk/' + (which === 'full' ? 'store' : 'outside'), runway, stage, canvas: $('#walk'), mode,
+    pxPerFrame: 6, dwell: 0.9, lookAround: true,
+    onProgress,
+    onLoad(frac, ready) {
+      status.style.setProperty('--loaded', Math.round(frac * 100) + '%');
+      const txt = status.querySelector('.txt');
+      if (frac >= 1) { status.classList.add('done'); txt.textContent = 'Scroll to walk'; }
+      else if (ready) txt.textContent = 'Scroll to walk';
+    },
+    onGeometry(g) {
+      frame.style.left = g.x + 'px'; frame.style.top = g.y + 'px';
+      frame.style.width = g.w + 'px'; frame.style.height = g.h + 'px';
+      // where the picture sits, so the arrival copy can keep clear of the first column of jars
+      stage.style.setProperty('--fx', g.x + 'px'); stage.style.setProperty('--fw', g.w + 'px');
+      stage.classList.add('drawn');
+    }
+  });
+  walk.ready.then(m => {
+    mode = m; syncMotionUI();
+    // place the door moment and the rail's door marker where the walk actually reaches the door
+    const man = walk.manifest(), du = man && man.door_u ? man.door_u : 1;
+    const door = beats.find(b => b.el.dataset.door);
+    if (door) { const [a, z] = door.el.dataset.door.split(',').map(Number); door.from = du + a; door.to = du + z; }
+    rail.querySelector('[data-door]').dataset.u = String(du);
+    lastU = -1; onProgress(walk.progress());
+  });
+  syncMotionUI();
+  window.cloudNineWalk = walk;   // for the console: cloudNineWalk.seek(u), .progress()
+
+  motionBtn.addEventListener('click', () => {
+    mode = moving() ? 'stills' : 'frames';
+    try { localStorage.setItem('c9-motion', moving() ? 'on' : 'off'); } catch (e) {}
+    syncMotionUI(); walk.setMode(mode);
+  });
+  railBtns.forEach(b => b.addEventListener('click', () => walk.scrollTo(+b.dataset.u, moving())));
+
+  /* THE JARS. The walk ends square on to the shop counter, with the wall of 15 jars behind it, 5 to a
+     shelf. Each position is the jar's centre in percent of the walk's LAST FRAME (measured on
+     shoot/keyframes/v10/store-2.png, which the film settles into), numbered in reading order.
+     Products are assigned to jars in the admin ("Jar on
+     the shelf"); 11 and 15, the bottom corners, are spare. A click opens the jar's side panel. */
+  const COLS = [34.9, 42.5, 50, 57.6, 65.2], ROWS = [36.7, 46.6, 56.6];
+  const JAR = n => (n >= 1 && n <= 15) ? [COLS[(n - 1) % 5], ROWS[Math.floor((n - 1) / 5)]] : null;
+  if (which === 'full') C9.load().then(({ products }) => {
+    const onWall = products.filter(p => JAR(p.slot));
+    onWall.forEach(p => {
+      const [x, y] = JAR(p.slot), a = document.createElement('a');
+      a.className = 'hs'; a.href = C9.page(p); a.dataset.id = p.id;
+      a.style.left = x + '%'; a.style.top = y + '%';
+      a.setAttribute('aria-label', p.name + ', ' + p.type + '. Open its panel.');
+      a.innerHTML = '<i></i><span class="tag"><img src="' + C9.esc(p.image) + '" alt="" loading="lazy"><b>' + C9.esc(p.name) +
+                    '</b><em>' + p.type + '</em></span>';
+      frame.appendChild(a);
+    });
+    C9.drawer.bind(frame, onWall);
+  }).catch(() => {});
+
+  /* coming back from a jar's page lands you at the counter, not at the top of the forest */
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  addEventListener('pagehide', () => { try { sessionStorage.setItem('c9-y', String(scrollY)); } catch (e) {} });
+  walk.ready.then(() => {
+    const nav = performance.getEntriesByType('navigation')[0];
+    let y = 0; try { y = +sessionStorage.getItem('c9-y') || 0; } catch (e) {}
+    if (location.hash === '#counter') walk.scrollTo(1, false);
+    else if (nav && nav.type === 'back_forward' && y) window.scrollTo(0, y);
+  });
+
+  /* the bar goes solid once the walk is behind you */
+  const bar = $('#bar');
+  const syncBar = () => bar.classList.toggle('solid', runway.getBoundingClientRect().bottom <= 68);
+  addEventListener('scroll', syncBar, { passive: true }); syncBar();
+
+  /* sections settle in once; visible by default, only hidden while motion is on */
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }),
+    { rootMargin: '0px 0px -8% 0px' });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+})();
+</script>
+</body>
+</html>

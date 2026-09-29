@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>All cultivars — Cloud Nine Clinical</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#16181A">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,300..600&family=Fragment+Mono&display=swap">
+<link rel="stylesheet" href="assets/site.css?v=20260929g">
+<link rel="stylesheet" href="assets/products/products.css?v=2">
+</head>
+<body>
+<a class="skip" href="#grid">Skip to the cultivars</a>
+<header class="bar solid">
+  <a class="mark" href="experience.html" aria-label="Cloud Nine Clinical, home">CLOUD NINE<span>Clinical</span></a>
+  <nav aria-label="Main">
+    <a class="hide-sm" href="experience.html#counter">The counter</a>
+    <a href="patients.html"><span class="long">Patient sign-in</span><span class="short">Sign in</span></a>
+    <a class="btn" href="{{BOOKING_URL}}"><span class="long">Request a consultation</span><span class="short">Enquire</span></a>
+  </nav>
+</header>
+
+<main class="pg">
+  <div class="wrap">
+    <div class="ix-head">
+      <div>
+        <p class="crumbs"><a href="experience.html#counter">The counter</a><span>/</span><span>All cultivars</span></p>
+        <h1 class="d-l" id="count">Every jar on the shelf.</h1>
+      </div>
+      <p>Each one has its own page: where it leans between indica and sativa, its THC and CBD, its terpenes, and how it was grown. A clinician decides with you what, if anything, is right.</p>
+    </div>
+    <div class="ix-tools">
+      <div class="seg" role="group" aria-label="Filter by type" id="seg"></div>
+      <label class="sort">Sort
+        <select id="sort">
+          <option value="slot">Shelf order</option>
+          <option value="thc">Strongest first</option>
+          <option value="name">A to Z</option>
+        </select>
+      </label>
+    </div>
+    <div class="grid4" id="grid" aria-live="polite"></div>
+    <p class="ix-note" id="note"></p>
+  </div>
+</main>
+
+<script src="assets/products/products.js?v=2"></script>
+<script>
+(async function () {
+  'use strict';
+  const $ = s => document.getElementById(s);
+  const { products } = await C9.load();
+  const TYPES = ['All', 'Indica', 'Hybrid', 'Sativa'];
+  const q = new URLSearchParams(location.search);
+  let type = TYPES.includes(q.get('type')) ? q.get('type') : 'All';
+  let sort = ['slot', 'thc', 'name'].includes(q.get('sort')) ? q.get('sort') : 'slot';
+  $('sort').value = sort;
+
+  const n = t => t === 'All' ? products.length : products.filter(p => p.type === t).length;
+  $('seg').innerHTML = TYPES.map(t => '<button type="button" data-t="' + t + '">' + t + '<span>' + n(t) + '</span></button>').join('');
+  const WORDS = ['No', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve', 'Thirteen',
+                 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen', 'Twenty'];
+  const total = products.length;
+  $('count').textContent = (WORDS[total] || total) + (total === 1 ? ' jar' : ' jars') + ' on the shelf.';
+
+  let shown = products;
+  function render() {
+    [...$('seg').children].forEach(b => b.setAttribute('aria-pressed', String(b.dataset.t === type)));
+    let list = products.filter(p => type === 'All' || p.type === type);
+    if (sort === 'thc') list = list.slice().sort((a, b) => b.thc - a.thc);
+    if (sort === 'name') list = list.slice().sort((a, b) => a.name.localeCompare(b.name));
+    shown = list;
+    $('grid').innerHTML = list.map(p =>
+      '<a class="card' + (p.stock === 'out' ? ' out' : '') + '" href="' + C9.page(p) + '" data-id="' + C9.esc(p.id) + '">' +
+        '<div class="img"><img src="' + C9.esc(p.image) + '" alt="" loading="lazy">' + (p.stock !== 'in' ? '<span class="flag">' + C9.STOCK[p.stock] + '</span>' : '') + '</div>' +
+        '<div class="t">' + C9.esc(p.name) + '<span>Jar ' + String(p.slot).padStart(2, '0') + '</span></div>' +
+        '<div class="m">' + p.type + ' · THC ' + C9.pct(p.thc) + ' · CBD ' + C9.pct(p.cbd) + '</div></a>').join('');
+    const u = new URL(location); u.searchParams.set('type', type); u.searchParams.set('sort', sort);
+    history.replaceState(null, '', u);
+  }
+  $('seg').addEventListener('click', e => { const b = e.target.closest('button'); if (b) { type = b.dataset.t; render(); } });
+  $('sort').addEventListener('change', e => { sort = e.target.value; render(); });
+  // a click opens the jar's side panel, stepping through whatever the filter and sort are showing
+  C9.drawer.bind($('grid'), () => shown);
+  $('note').textContent = 'Demonstration photographs from Pexels. Every cultivar is dispensed only against a prescription written for you after a consultation.';
+  render();
+})();
+</script>
+</body>
+</html>

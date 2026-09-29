@@ -1,0 +1,434 @@
+{
+  "updated": "2026-09-29",
+  "products": [
+    {
+      "id": "pine-haze",
+      "slot": 1,
+      "name": "Pine Haze",
+      "type": "Hybrid",
+      "indica": 60,
+      "thc": 22,
+      "cbd": 0.5,
+      "terpenes": [
+        {
+          "name": "Myrcene",
+          "pct": 0.8
+        },
+        {
+          "name": "Limonene",
+          "pct": 0.5
+        },
+        {
+          "name": "β-Caryophyllene",
+          "pct": 0.4
+        }
+      ],
+      "jar_g": 10,
+      "grown": "Indoor",
+      "stock": "in",
+      "notes": "Long, lime-green flowers with amber pistils and a heavy frost. Pine and citrus peel on opening the jar. Hang-dried for ten days and cured slowly for four weeks.",
+      "image": "assets/products/img/a-close-up-shot-of-an-infused-weeds-9147616.jpg",
+      "credit": {
+        "by": "Terrance Barksdale",
+        "url": "https://www.pexels.com/photo/a-close-up-shot-of-an-infused-weeds-9147616/",
+        "source": "Pexels"
+      }
+    },
+    {
+      "id": "copper-ridge",
+      "slot": 2,
+      "name": "Copper Ridge",
+      "type": "Indica",
+      "indica": 80,
+      "thc": 24,
+      "cbd": 0.4,
+      "terpenes": [
+        {
+          "name": "Myrcene",
+          "pct": 1.1
+        },
+        {
+          "name": "β-Caryophyllene",
+          "pct": 0.6
+        },
+        {
+          "name": "Linalool",
+          "pct": 0.3
+        }
+      ],
+      "jar_g": 10,
+      "grown": "Indoor",
+      "stock": "in",
+      "notes": "Dense, rounded flowers turning copper at the tips. Earth, clove and dried fruit. Trimmed by hand and cured for five weeks.",
+      "image": "assets/products/img/close-up-shot-of-a-cannabis-bud-with-trichomes-34246665.jpg",
+      "credit": {
+        "by": "Diego Barros",
+        "url": "https://www.pexels.com/photo/close-up-shot-of-a-cannabis-bud-with-trichomes-34246665/",
+        "source": "Pexels"
+      }
+    },
+    {
+      "id": "night-fern",
+      "slot": 3,
+      "name": "Night Fern",
+      "type": "Indica",
+      "indica": 85,
+      "thc": 26,
+      "cbd": 0.3,
+      "terpenes": [
+        {
+          "name": "Myrcene",
+          "pct": 1.2
+        },
+        {
+          "name": "Humulene",
+          "pct": 0.4
+        },
+        {
+          "name": "Linalool",
+          "pct": 0.3
+        }
+      ],
+      "jar_g": 10,
+      "grown": "Indoor",
+      "stock": "low",
+      "notes": "Tight, dark flowers with deep green and violet leaf. Damp forest floor and cocoa. Slow-cured in glass.",
+      "image": "assets/products/img/close-up-of-smoked-cannabis-8273262.jpg",
+      "credit": {
+        "by": "Terrance Barksdale",
+        "url": "https://www.pexels.com/photo/close-up-of-smoked-cannabis-8273262/",
+        "source": "Pexels"
+      }
+    },
+    {
+      "id": "hollow-pine",
+      "slot": 4,
+      "name": "Hollow Pine",
+      "type": "Hybrid",
+      "indica": 55,
+      "thc": 21,
+      "cbd": 0.6,
+      "terpenes": [
+        {
+          "name": "Pinene",
+          "pct": 0.7
+        },
+        {
+          "name": "Myrcene",
+          "pct": 0.5
+        },
+        {
+          "name": "Limonene",
+          "pct": 0.4
+        }
+      ],
+      "jar_g": 10,
+      "grown": "Greenhouse",
+      "stock": "in",
+      "notes": "Tall, tapering flowers heavy with trichomes. Fresh-cut pine and sweet resin. Greenhouse grown under natural light.",
+      "image": "assets/products/img/close-up-of-frosty-cannabis-bud-on-black-34246666.jpg",
+      "credit": {
+        "by": "Diego Barros",
+        "url": "https://www.pexels.com/photo/close-up-of-frosty-cannabis-bud-on-black-background-34246666/",
+        "source": "Pexels"
+      }
+    },
+    {
+      "id": "frost-hollow",
+      "slot": 5,
+      "name": "Frost Hollow",
+      "type": "Hybrid",
+      "indica": 50,
+      "thc": 23,
+      "cbd": 0.5,
+      "terpenes": [
+        {
+          "name": "Limonene",
+          "pct": 0.7
+        },
+        {
+          "name": "β-Caryophyllene",
+          "pct": 0.5
+        },
+        {
+          "name": "Myrcene",
+          "pct": 0.4
+        }
+      ],
+      "jar_g": 10,
+      "grown": "Indoor",
+      "stock": "in",
+      "notes": "So thickly frosted it looks silver under the counter lights. Lemon rind and white pepper. Cured for four weeks.",
+      "image": "assets/products/img/close-up-of-trichomes-on-cannabis-bud-30682041.jpg",
+      "credit": {
+        "by": "Diego Barros",
+        "url": "https://www.pexels.com/photo/close-up-of-trichomes-on-cannabis-bud-30682041/",
+        "source": "Pexels"
+      }
+    },
+    {
+      "id": "birch-lime",
+      "slot": 6,
+      "name": "Birch Lime",
+      "type": "Sativa",
+      "indica": 25,
+      "thc": 19,
+      "cbd": 0.4,
+      "terpenes": [
+        {
+          "name": "Terpinolene",
+          "pct": 0.8
+        },
+        {
+          "name": "Limonene",
+          "pct": 0.5
+        },
+        {
+          "name": "Ocimene",
+          "pct": 0.3
+        }
+      ],
+      "jar_g": 10,
+      "grown": "Greenhouse",
+      "stock": "in",
+      "notes": "Airy, bright green flowers with long orange hairs. Lime zest and fresh sap. Greenhouse grown, dried slowly.",
+      "image": "assets/products/img/close-up-of-frosty-cannabis-buds-30682042.jpg",
+      "credit": {
+        "by": "Diego Barros",
+        "url": "https://www.pexels.com/photo/close-up-of-frosty-cannabis-buds-30682042/",
+        "source": "Pexels"
+      }
+    },
+    {
+      "id": "morning-ridge",
+      "slot": 7,
+      "name": "Morning Ridge",
+      "type": "Sativa",
+      "indica": 20,
+      "thc": 20,
+      "cbd": 0.3,
+      "terpenes": [
+        {
+          "name": "Terpinolene",
+          "pct": 0.9
+        },
+        {
+          "name": "Pinene",
+          "pct": 0.4
+        },
+        {
+          "name": "Ocimene",
+          "pct": 0.3
+        }
+      ],
+      "jar_g": 10,
+      "grown": "Greenhouse",
+      "stock": "out",
+      "notes": "Loose, spear-shaped flowers with a sugary frost. Green apple and cut grass. Back in stock next month.",
+      "image": "assets/products/img/macro-shot-of-frosty-cannabis-bud-with-trichomes-30682040.jpg",
+      "credit": {
+        "by": "Diego Barros",
+        "url": "https://www.pexels.com/photo/macro-shot-of-frosty-cannabis-bud-with-trichomes-30682040/",
+        "source": "Pexels"
+      }
+    },
+    {
+      "id": "cedar-kush",
+      "slot": 8,
+      "name": "Cedar Kush",
+      "type": "Indica",
+      "indica": 75,
+      "thc": 25,
+      "cbd": 0.4,
+      "terpenes": [
+        {
+          "name": "β-Caryophyllene",
+          "pct": 0.9
+        },
+        {
+          "name": "Myrcene",
+          "pct": 0.7
+        },
+        {
+          "name": "Humulene",
+          "pct": 0.3
+        }
+      ],
+      "jar_g": 15,
+      "grown": "Indoor",
+      "stock": "in",
+      "notes": "Chunky, resinous flowers with olive and lime tones. Cedar box, black pepper and hash. Hand-trimmed, cured for six weeks.",
+      "image": "assets/products/img/marijuana-in-glass-jar-9146962.jpg",
+      "credit": {
+        "by": "Terrance Barksdale",
+        "url": "https://www.pexels.com/photo/marijuana-in-glass-jar-9146962/",
+        "source": "Pexels"
+      }
+    },
+    {
+      "id": "slate-kush",
+      "slot": 9,
+      "name": "Slate Kush",
+      "type": "Indica",
+      "indica": 80,
+      "thc": 27,
+      "cbd": 0.2,
+      "terpenes": [
+        {
+          "name": "Myrcene",
+          "pct": 1.3
+        },
+        {
+          "name": "Limonene",
+          "pct": 0.4
+        },
+        {
+          "name": "β-Caryophyllene",
+          "pct": 0.4
+        }
+      ],
+      "jar_g": 10,
+      "grown": "Indoor",
+      "stock": "low",
+      "notes": "The strongest jar on the shelf. Dense, grey-green flowers and a sharp diesel note over sweet earth. Cured in glass for five weeks.",
+      "image": "assets/products/img/kush-in-clear-glass-jar-9147793.jpg",
+      "credit": {
+        "by": "Terrance Barksdale",
+        "url": "https://www.pexels.com/photo/kush-in-clear-glass-jar-9147793/",
+        "source": "Pexels"
+      }
+    },
+    {
+      "id": "black-alder",
+      "slot": 10,
+      "name": "Black Alder",
+      "type": "Indica",
+      "indica": 90,
+      "thc": 23,
+      "cbd": 0.5,
+      "terpenes": [
+        {
+          "name": "Myrcene",
+          "pct": 1.0
+        },
+        {
+          "name": "Linalool",
+          "pct": 0.5
+        },
+        {
+          "name": "β-Caryophyllene",
+          "pct": 0.3
+        }
+      ],
+      "jar_g": 10,
+      "grown": "Indoor",
+      "stock": "in",
+      "notes": "Deep blue-violet flowers, almost black at the core. Blackcurrant and lavender. Slow-dried at a low temperature to keep the colour.",
+      "image": "assets/products/img/a-close-up-shot-of-green-kush-on-brown-wooden-6462278.jpg",
+      "credit": {
+        "by": "Terrance Barksdale",
+        "url": "https://www.pexels.com/photo/a-close-up-shot-of-green-kush-on-brown-wooden-surface-6462278/",
+        "source": "Pexels"
+      }
+    },
+    {
+      "id": "still-water",
+      "slot": 12,
+      "name": "Still Water",
+      "type": "Hybrid",
+      "indica": 50,
+      "thc": 9,
+      "cbd": 9,
+      "terpenes": [
+        {
+          "name": "Myrcene",
+          "pct": 0.6
+        },
+        {
+          "name": "Pinene",
+          "pct": 0.4
+        },
+        {
+          "name": "Bisabolol",
+          "pct": 0.2
+        }
+      ],
+      "jar_g": 10,
+      "grown": "Greenhouse",
+      "stock": "in",
+      "notes": "A balanced cultivar with equal THC and CBD. Soft, herbal and slightly floral. Every batch is lab-tested for its ratio.",
+      "image": "assets/products/img/pincers-over-plant-9259989.jpg",
+      "credit": {
+        "by": "Jess Loiterton",
+        "url": "https://www.pexels.com/photo/pincers-over-plant-9259989/",
+        "source": "Pexels"
+      }
+    },
+    {
+      "id": "clearwater",
+      "slot": 13,
+      "name": "Clearwater",
+      "type": "Sativa",
+      "indica": 30,
+      "thc": 18,
+      "cbd": 1.0,
+      "terpenes": [
+        {
+          "name": "Limonene",
+          "pct": 0.8
+        },
+        {
+          "name": "Pinene",
+          "pct": 0.5
+        },
+        {
+          "name": "Terpinolene",
+          "pct": 0.3
+        }
+      ],
+      "jar_g": 10,
+      "grown": "Greenhouse",
+      "stock": "in",
+      "notes": "Light, fluffy flowers packed loose to keep their shape. Grapefruit and pine needles. Greenhouse grown.",
+      "image": "assets/products/img/cannabis-in-a-glass-jar-in-close-up-photography-6486358.jpg",
+      "credit": {
+        "by": "Terrance Barksdale",
+        "url": "https://www.pexels.com/photo/cannabis-in-a-glass-jar-in-close-up-photography-6486358/",
+        "source": "Pexels"
+      }
+    },
+    {
+      "id": "moss-gate",
+      "slot": 14,
+      "name": "Moss Gate",
+      "type": "Hybrid",
+      "indica": 60,
+      "thc": 21,
+      "cbd": 0.7,
+      "terpenes": [
+        {
+          "name": "β-Caryophyllene",
+          "pct": 0.7
+        },
+        {
+          "name": "Myrcene",
+          "pct": 0.6
+        },
+        {
+          "name": "Humulene",
+          "pct": 0.3
+        }
+      ],
+      "jar_g": 10,
+      "grown": "Indoor",
+      "stock": "in",
+      "notes": "Moss-green flowers with a light frost and amber hairs. Wet stone, herbs and a little spice. Cured for four weeks.",
+      "image": "assets/products/img/cannabis-falling-out-of-a-glass-6569241.jpg",
+      "credit": {
+        "by": "Terrance Barksdale",
+        "url": "https://www.pexels.com/photo/cannabis-falling-out-of-a-glass-6569241/",
+        "source": "Pexels"
+      }
+    }
+  ]
+}

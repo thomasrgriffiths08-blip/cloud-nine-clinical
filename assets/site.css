@@ -1,0 +1,360 @@
+/* =========================================================================================
+   CLOUD NINE CLINICAL — site.css
+
+   DIRECTION
+   Subject:   slate roof, grey limestone plinth, charred-timber frame, glazed gable, tall oak doors,
+              lamplight through the doorway, overcast autumn sky, wet gravel track, copper leaves,
+              the consultation, the prescription, the clinical record.
+   Concept:   "An architect's approach to a building: measured, cool and quiet outside, and the only
+              warmth is the lit door, which opens by appointment."
+   Palette:   timber #16181A (dark ground, text) · slate #3A4148 (secondary) · overcast #E7E9E8
+              (light ground) · stone #CFCEC8 (hairlines, surfaces) · lamp #F0C27A (the door, only)
+              https://www.realtimecolors.com/?colors=16181a-e7e9e8-3a4148-cfcec8-f0c27a&fonts=Archivo-Archivo
+   Type:      Archivo, width axis 100–125 (architectural signage → body) · Fragment Mono (the record)
+   Texture:   none. The film is the texture; hairlines are the only ornament.
+   Signature: the approach — the walk scrubbed by scroll, and the lit doorway that opens the patient area.
+   Motion:    "Only the walk moves; everything else settles."
+   Escapes:   not cream + serif + terracotta, not serif + gold on black. Cool grey world, one warm light.
+   ========================================================================================= */
+
+:root {
+  --timber: #16181A;
+  --slate: #3A4148;
+  --overcast: #E7E9E8;
+  --stone: #CFCEC8;
+  --lamp: #F0C27A;
+
+  --ink-soft: color-mix(in srgb, var(--slate) 88%, var(--overcast));
+  --on-dark: var(--overcast);
+  --on-dark-soft: color-mix(in srgb, var(--overcast) 70%, transparent);
+  --hair: color-mix(in srgb, var(--slate) 22%, transparent);
+  --hair-dark: color-mix(in srgb, var(--overcast) 16%, transparent);
+
+  --sans: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --mono: "Fragment Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --wrap: 1240px;
+  --gutter: clamp(20px, 5vw, 64px);
+  --sect: clamp(88px, 12vw, 168px);
+  --bar-h: 68px;
+}
+
+[hidden] { display: none !important; }
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--overcast); color: var(--timber);
+  font: 380 17px/1.55 var(--sans); font-stretch: 100%;
+  -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+}
+img, canvas, video { display: block; max-width: 100%; }
+a { color: inherit; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--lamp); outline-offset: 3px; }
+
+.wrap { width: min(var(--wrap), 100% - var(--gutter) * 2); margin-inline: auto; }
+.skip { position: absolute; left: 12px; top: -60px; z-index: 100; background: var(--overcast); color: var(--timber);
+        padding: 10px 14px; font: 500 14px/1 var(--sans); text-decoration: none; }
+.skip:focus { top: 12px; }
+
+/* ---- type ---- */
+.label { font: 400 11.5px/1.4 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft); }
+.label .n { color: var(--timber); }
+h1, h2, h3 { margin: 0; font-family: var(--sans); font-weight: 400; }
+.d-xl { font-size: clamp(44px, 6.2vw, 100px); font-stretch: 112%; font-weight: 360; line-height: .95; letter-spacing: -.03em; }
+.d-l  { font-size: clamp(34px, 4.4vw, 64px);  font-stretch: 110%; font-weight: 380; line-height: 1.02; letter-spacing: -.024em; }
+.d-m  { font-size: clamp(24px, 2.4vw, 32px);  font-stretch: 106%; font-weight: 420; line-height: 1.12; letter-spacing: -.014em; }
+p { margin: 0; }
+.lede { font-size: clamp(17px, 1.35vw, 19.5px); line-height: 1.5; max-width: 46ch; }
+
+/* ---- buttons: square-cornered, like joinery ---- */
+.btn { display: inline-flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 22px; border-radius: 2px;
+       font: 500 15px/1 var(--sans); font-stretch: 104%; letter-spacing: .005em; text-decoration: none; cursor: pointer;
+       border: 1px solid transparent; transition: background-color .2s ease, color .2s ease, border-color .2s ease; }
+.btn.solid { background: var(--timber); color: var(--overcast); }
+.btn.solid:hover { background: var(--slate); }
+.btn.light { background: var(--overcast); color: var(--timber); }
+.btn.light:hover { background: #fff; }
+.btn.line { border-color: currentColor; background: transparent; }
+.btn.line:hover { background: color-mix(in srgb, currentColor 10%, transparent); }
+.btn .arr { transition: transform .25s ease; }
+.btn:hover .arr { transform: translateX(3px); }
+
+/* ---- the bar: transparent over the walk, solid after it (no backdrop-filter: taste-check §7) ---- */
+.bar { position: fixed; inset: 0 0 auto 0; z-index: 50; height: var(--bar-h); display: flex; align-items: center;
+       justify-content: space-between; gap: 24px; padding-inline: var(--gutter); color: var(--on-dark);
+       transition: background-color .35s ease, color .35s ease, border-color .35s ease; border-bottom: 1px solid transparent; }
+.bar.solid { background: color-mix(in srgb, var(--overcast) 96%, transparent); color: var(--timber); border-bottom-color: var(--hair); }
+.mark { display: flex; align-items: baseline; gap: 10px; text-decoration: none; white-space: nowrap;
+        font: 500 15px/1 var(--sans); font-stretch: 125%; letter-spacing: .16em; }
+.mark span { font: 400 10.5px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; opacity: .72; }
+.bar nav { display: flex; align-items: center; gap: clamp(14px, 2.4vw, 32px); }
+.bar nav a:not(.btn) { font: 450 14.5px/1 var(--sans); text-decoration: none; opacity: .86; }
+.bar nav a:not(.btn):hover { opacity: 1; text-decoration: underline; text-underline-offset: 5px; text-decoration-thickness: 1px; }
+.bar .btn { min-height: 40px; padding: 0 16px; font-size: 14px; }
+.bar:not(.solid) .btn { background: var(--overcast); color: var(--timber); }
+.bar.solid .btn { background: var(--timber); color: var(--overcast); }
+.bar.solid .btn:hover { background: var(--slate); }
+.bar .short { display: none; }
+@media (max-width: 760px) {
+  .bar nav a.hide-sm { display: none; } .mark span { display: none; }
+  .bar .long { display: none; } .bar .short { display: inline; }
+  .bar nav { gap: 16px; }
+}
+
+/* ==========================================================================================
+   THE WALK
+   ========================================================================================== */
+.runway { position: relative; background: var(--timber); }
+.stage { --tb: 0px; position: sticky; top: 0; height: 100vh; height: 100lvh; overflow: hidden; background: var(--timber); color: var(--on-dark); }
+.stage .poster, .stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.stage .poster img { width: 100%; height: 100%; object-fit: cover; }
+.stage canvas { opacity: 0; transition: opacity .5s ease; }
+.stage.drawn canvas { opacity: 1; }
+@supports (height: 100lvh) { .stage { --tb: calc(100lvh - 100svh); } }
+/* scrims: enough to read type over a photograph, never a visible band */
+.stage::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background:
+    linear-gradient(to top, color-mix(in srgb, var(--timber) 78%, transparent) 0%, transparent 42%),
+    linear-gradient(to bottom, color-mix(in srgb, var(--timber) 45%, transparent) 0%, transparent 18%); }
+
+.beat { position: absolute; z-index: 3; opacity: 0; visibility: hidden; will-change: opacity, transform; }
+.beat.on { visibility: visible; }
+.beat .label { color: color-mix(in srgb, var(--overcast) 86%, transparent); text-shadow: 0 1px 12px color-mix(in srgb, var(--timber) 60%, transparent); }
+.b-open { left: var(--gutter); bottom: calc(clamp(88px, 13vh, 150px) + var(--tb)); max-width: min(760px, 88vw); }
+.b-open h1 { margin-top: 18px; }
+.b-open .lede { margin-top: 22px; color: var(--on-dark); }
+.b-open .skipwalk { display: inline-block; margin-top: 26px; font: 400 12px/1 var(--mono); letter-spacing: .08em;
+                    text-transform: uppercase; color: var(--on-dark-soft); text-underline-offset: 5px; }
+.b-lodge { right: calc(var(--gutter) + 72px); bottom: calc(clamp(88px, 16vh, 180px) + var(--tb)); max-width: 520px; text-align: right; }
+.b-lodge p.d-l { margin-top: 0; }
+.b-arrive { left: var(--gutter); bottom: calc(clamp(72px, 11vh, 120px) + var(--tb)); max-width: 560px; }
+.b-arrive h2 { margin-top: 14px; }
+.b-arrive p.sub { margin-top: 14px; color: var(--on-dark); max-width: 46ch; }
+/* once you have arrived the copy sits over a busy counter: deepen the shade under it, left and low */
+.stage::before { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; opacity: 0; transition: opacity .6s ease;
+  background: radial-gradient(95% 100% at 0% 100%, color-mix(in srgb, var(--timber) 90%, transparent) 0%, color-mix(in srgb, var(--timber) 55%, transparent) 38%, transparent 66%); }
+.stage.live::before { opacity: 1; }
+.b-arrive .acts { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 22px; }
+.b-arrive .label { color: var(--overcast); }
+.b-arrive h2, .b-arrive p.sub { text-shadow: 0 1px 18px color-mix(in srgb, var(--timber) 70%, transparent); }
+/* the rail sits over lit shelving once you are inside: give its words a shadow to stand on */
+.rail button span { text-shadow: 0 0 6px var(--timber), 0 1px 14px color-mix(in srgb, var(--timber) 80%, transparent); }
+/* the full walk ends facing the shop counter with the jar wall behind it: the copy sits low and left,
+   over the side shelving and the end of the counter, and stops short of the first column of jars
+   (34.9% of the picture, minus half a jar). --fx/--fw are the drawn picture's left edge and width. */
+.runway[data-walk="full"] .b-arrive.only-full { max-width: clamp(260px, calc(var(--fx, 0px) + var(--fw, 100vw) * .33 - var(--gutter) - 12px), 460px); }
+.b-arrive.only-full h2 { font-size: clamp(30px, 2.8vw, 46px); }
+.b-arrive.only-full .acts .btn { min-height: 44px; padding: 0 18px; }
+.b-arrive .btn.line { color: var(--overcast); }
+
+/* the rail: where you are on the walk, and a way to jump */
+.rail { position: absolute; z-index: 4; right: var(--gutter); top: calc(var(--bar-h) + clamp(28px, 9vh, 96px));
+        display: grid; gap: 0; justify-items: end; }
+.rail .track { position: absolute; right: 3px; top: 8px; bottom: 8px; width: 1px; background: var(--hair-dark); }
+.rail .fill { position: absolute; right: 3px; top: 8px; width: 1px; height: calc((100% - 16px) * var(--p, 0));
+              background: var(--lamp); transform-origin: top; }
+.rail button { position: relative; display: flex; align-items: center; gap: 12px; padding: 14px 0; background: none; border: 0;
+               cursor: pointer; font: 400 11px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase;
+               color: var(--on-dark-soft); transition: color .3s ease; }
+.rail button + button { margin-top: clamp(20px, 5vh, 52px); }
+.rail button i { width: 7px; height: 7px; border-radius: 50%; border: 1px solid currentColor; background: var(--timber);
+                 transition: background-color .3s ease, border-color .3s ease; }
+.rail button.here { color: var(--overcast); }
+.rail button.here i { background: var(--lamp); border-color: var(--lamp); }
+.rail button:hover { color: var(--overcast); }
+
+/* the doorway, in picture space: .frame is positioned by the renderer to match the drawn image */
+.frame { position: absolute; z-index: 2; pointer-events: none; }
+.door { position: absolute; left: 39.6%; top: 34.6%; width: 20%; height: 46.6%; pointer-events: none; border: 0; padding: 0;
+        background: none; cursor: pointer; opacity: 0; transition: opacity .6s ease; }
+.stage.live .door { pointer-events: auto; opacity: 1; }
+.door::before { content: ""; position: absolute; inset: -30% -45%; border-radius: 50%; pointer-events: none;
+                background: radial-gradient(closest-side, color-mix(in srgb, var(--lamp) 60%, transparent), transparent 72%);
+                opacity: .18; transition: opacity .5s ease; mix-blend-mode: screen; }
+.door:hover::before, .door:focus-visible::before { opacity: .62; }
+.door .tag { position: absolute; left: 50%; bottom: calc(100% + 14px); transform: translateX(-50%); white-space: nowrap;
+             font: 400 11px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--timber);
+             background: var(--lamp); padding: 8px 10px; opacity: 0; transition: opacity .25s ease; }
+.door:hover .tag, .door:focus-visible .tag { opacity: 1; }
+/* pulses follow the page's own motion switch (html.motion-off), not the OS setting: the walk plays by
+   default for everyone, and anyone who wants it still presses "Reduce motion" */
+:root:not(.motion-off) .stage.live .door::before { animation: lamp 4.5s ease-in-out infinite; }
+:root:not(.motion-off) .door:hover::before, :root:not(.motion-off) .door:focus-visible::before { animation: none; }
+@keyframes lamp { 0%, 100% { opacity: .14 } 50% { opacity: .3 } }
+/* The doorway is a pointer delight. On touch it would be a huge invisible link under the arrival copy,
+   and a stray tap would leave the page; the "Patient sign-in" button does the job there. */
+@media (hover: none) { .door { display: none; } }
+
+.hud { position: absolute; z-index: 4; left: var(--gutter); right: var(--gutter); bottom: calc(22px + var(--tb)); display: flex;
+       align-items: center; justify-content: space-between; gap: 16px; pointer-events: none; }
+.hud > * { pointer-events: auto; }
+.hud .status { font: 400 11px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--on-dark-soft); }
+.hud .load { position: relative; display: inline-block; width: 72px; height: 1px; margin-left: 10px; vertical-align: middle;
+             background: var(--hair-dark); }
+.hud .load::after { content: ""; position: absolute; inset: 0 auto 0 0; width: var(--loaded, 0%); background: var(--overcast); transition: width .3s ease; }
+.hud .status.done .load { display: none; }
+.motion { background: none; border: 1px solid var(--hair-dark); color: var(--on-dark-soft); border-radius: 2px;
+          padding: 9px 12px; font: 400 11px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; cursor: pointer; }
+.motion:hover { color: var(--overcast); border-color: var(--on-dark-soft); }
+
+@media (max-width: 760px) {
+  .rail { top: auto; bottom: calc(70px + var(--tb)); right: var(--gutter); transform: none; }
+  .rail button span { display: none; }
+  .rail button + button { margin-top: 14px; }
+  .rail button { padding: 6px 0; }
+  .b-lodge { right: var(--gutter); left: var(--gutter); max-width: none; text-align: left; bottom: calc(150px + var(--tb)); }
+  .b-open { bottom: calc(118px + var(--tb)); }
+  .b-arrive { bottom: calc(84px + var(--tb)); right: var(--gutter); }
+  .b-arrive .acts .btn { flex: 1 1 auto; justify-content: center; }
+}
+/* portrait screens: the copy sits over the counter front, under the bottom shelf of jars */
+@media (max-aspect-ratio: 7/5) {
+  .runway[data-walk="full"] .b-arrive.only-full { max-width: none; left: var(--gutter); right: var(--gutter); }
+}
+@media (max-aspect-ratio: 7/5) and (max-height: 720px) { .b-arrive.only-full .sub { display: none; } }
+.b-arrive .sub .short { display: none; }
+@media (max-width: 760px) {
+  /* phones: one line of copy, so the text stays under the bottom shelf of jars */
+  .b-arrive .sub .long { display: none; }
+  .b-arrive .sub .short { display: inline; }
+  .b-arrive.only-full p.sub { font-size: 14px; margin-top: 8px; }
+  .b-arrive.only-full h2 { margin-top: 8px; }
+  .b-arrive.only-full .acts { margin-top: 14px; }
+  /* once you have arrived the rail has done its job, and on a phone it would sit on the buttons */
+  .stage.live .rail { opacity: 0; pointer-events: none; }
+}
+
+/* ==========================================================================================
+   THE DOCUMENT — after the walk, the page is plain, fast and complete
+   ========================================================================================== */
+section.sect { padding-block: var(--sect); }
+.reveal { transition: opacity .7s ease, transform .7s cubic-bezier(.2,.7,.2,1); }
+.js-motion .reveal:not(.in) { opacity: 0; transform: translateY(18px); }
+
+/* the register: an architect's title block, holding what the law says must be conspicuous */
+.register { background: var(--overcast); border-bottom: 1px solid var(--hair); }
+.titleblock { display: grid; grid-template-columns: 1.1fr repeat(4, 1fr); border-inline: 1px solid var(--hair); }
+.titleblock > div { padding: 26px 22px; border-right: 1px solid var(--hair); min-height: 118px; display: flex;
+                    flex-direction: column; justify-content: space-between; gap: 18px; }
+.titleblock > div:last-child { border-right: 0; }
+.titleblock dt { margin: 0; }
+.titleblock dd { margin: 0; font: 450 17px/1.25 var(--sans); font-stretch: 104%; }
+.titleblock .cqc { background: color-mix(in srgb, var(--stone) 38%, var(--overcast)); }
+.titleblock .cqc dd { font: 400 13px/1.45 var(--sans); color: var(--ink-soft); }
+@media (max-width: 900px) {
+  .titleblock { grid-template-columns: 1fr 1fr; border-inline: 0; }
+  .titleblock > div { border-bottom: 1px solid var(--hair); }
+  .titleblock > div:nth-child(2n) { border-right: 0; }
+  .titleblock .cqc { grid-column: 1 / -1; border-right: 0; }
+}
+
+/* the consultation: four steps on a dimension line */
+.consult .head { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: clamp(28px, 6vw, 96px); align-items: end; }
+.consult .head h2 { margin-top: 20px; max-width: 14ch; }
+.consult .head .side p { color: var(--ink-soft); }
+.consult .head .side .btn { margin-top: 26px; }
+.steps { list-style: none; margin: clamp(56px, 8vw, 104px) 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr);
+         position: relative; }
+.steps::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 1px; background: var(--timber); }
+.steps::after { content: ""; position: absolute; right: 0; top: -6px; width: 1px; height: 13px; background: var(--timber); }
+.steps li { position: relative; padding: 34px clamp(12px, 2vw, 32px) 0 0; }
+.steps li::before { content: ""; position: absolute; left: 0; top: -6px; width: 1px; height: 13px; background: var(--timber); }
+.steps .num { font: 400 11.5px/1 var(--mono); letter-spacing: .08em; color: var(--ink-soft); }
+.steps h3 { margin-top: 18px; font-size: 21px; font-stretch: 106%; font-weight: 480; letter-spacing: -.01em; line-height: 1.2; }
+.steps p { margin-top: 12px; color: var(--ink-soft); font-size: 16px; max-width: 30ch; }
+.disclose { margin-top: 18px; font-size: 13.5px; line-height: 1.5; color: var(--ink-soft); max-width: 52ch; }
+@media (max-width: 900px) {
+  .consult .head { grid-template-columns: 1fr; align-items: start; }
+  .steps { grid-template-columns: 1fr; }
+  .steps::before { left: 0; right: auto; top: 0; bottom: 0; width: 1px; height: auto; }
+  .steps::after { display: none; }
+  .steps li { padding: 0 0 38px 30px; }
+  .steps li::before { left: -6px; top: 4px; width: 13px; height: 1px; }
+  .steps h3 { margin-top: 10px; }
+}
+
+/* the information: a measured index */
+.info { background: color-mix(in srgb, var(--stone) 34%, var(--overcast)); }
+.info .grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(28px, 6vw, 96px); align-items: start; }
+.info .intro { position: sticky; top: calc(var(--bar-h) + 40px); }
+.info .intro h2 { margin-top: 20px; max-width: 12ch; }
+.info .intro p { margin-top: 22px; color: var(--ink-soft); max-width: 36ch; font-size: 15.5px; }
+.index { border-top: 1px solid var(--timber); }
+.index details { border-bottom: 1px solid var(--hair); }
+.index summary { list-style: none; display: grid; grid-template-columns: 56px 1fr 24px; align-items: center; gap: 12px;
+                 padding: 24px 0; cursor: pointer; }
+.index summary::-webkit-details-marker { display: none; }
+.index summary .k { font: 400 11.5px/1 var(--mono); letter-spacing: .08em; color: var(--ink-soft); }
+.index summary .t { font: 440 clamp(19px, 1.7vw, 23px)/1.2 var(--sans); font-stretch: 106%; letter-spacing: -.01em; }
+.index summary .pm { position: relative; width: 14px; height: 14px; justify-self: end; }
+.index summary .pm::before, .index summary .pm::after { content: ""; position: absolute; left: 0; top: 6.5px; width: 14px; height: 1px;
+                 background: currentColor; transition: transform .3s ease; }
+.index summary .pm::after { transform: rotate(90deg); }
+.index details[open] summary .pm::after { transform: rotate(0deg); }
+.index .in { padding: 0 36px 28px 68px; color: var(--ink-soft); max-width: 62ch; }
+.index .in b { color: var(--timber); font-weight: 500; }
+@media (max-width: 900px) {
+  .info .grid { grid-template-columns: 1fr; }
+  .info .intro { position: static; }
+  .index summary { grid-template-columns: 40px 1fr 20px; }
+  .index .in { padding: 0 0 26px 52px; }
+}
+
+/* the foot: the name as architecture */
+.foot { background: var(--timber); color: var(--on-dark); padding-top: clamp(80px, 10vw, 140px); overflow: hidden; }
+.foot .close { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: clamp(28px, 6vw, 96px); align-items: end; }
+.foot .close h2 { max-width: 13ch; }
+.foot .close p { color: var(--on-dark-soft); }
+.foot .close .acts { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+.foot .close .btn.line { color: var(--overcast); }
+/* "CLOUD NINE" measures 7.725em at wdth 125, so 11.9vw fills 92% of any viewport — measured, not guessed */
+.foot .word { margin: clamp(72px, 10vw, 140px) 0 0; font: 500 clamp(40px, 11.9vw, 212px)/.8 var(--sans); font-stretch: 125%;
+              letter-spacing: -.02em; white-space: nowrap; color: var(--overcast); text-align: center; }
+.foot .legal { border-top: 1px solid var(--hair-dark); margin-top: clamp(32px, 4vw, 56px); padding: 26px 0 40px;
+               display: flex; flex-wrap: wrap; gap: 14px 32px; justify-content: space-between; font-size: 13px; color: var(--on-dark-soft); }
+.foot .legal nav { display: flex; flex-wrap: wrap; gap: 20px; }
+.foot .legal a { text-decoration: none; }
+.foot .legal a:hover { color: var(--overcast); text-decoration: underline; text-underline-offset: 4px; }
+@media (max-width: 900px) { .foot .close { grid-template-columns: 1fr; } }
+
+/* ---- the patient area's detail panel ---- */
+.backdrop { position: fixed; inset: 0; z-index: 60; background: color-mix(in srgb, var(--timber) 55%, transparent); }
+.panel { position: fixed; z-index: 61; top: 0; right: 0; bottom: 0; width: min(460px, 100%); background: var(--overcast);
+         color: var(--timber); padding: clamp(28px, 4vw, 48px); display: flex; flex-direction: column; gap: 18px;
+         transform: translateX(102%); transition: transform .45s cubic-bezier(.2,.7,.2,1); overflow-y: auto; }
+.panel.open { transform: none; }
+.panel .x { align-self: flex-end; background: none; border: 1px solid var(--hair); width: 40px; height: 40px; border-radius: 2px;
+            cursor: pointer; font-size: 20px; line-height: 1; }
+.panel .note { font-size: 13.5px; color: var(--ink-soft); border-top: 1px solid var(--hair); padding-top: 18px; }
+
+/* the jars at the counter: each marker is the jar itself (a jar-sized hit area, in picture space), with a
+   dot that pulses so the wall reads as clickable, a lamp-warm glow on hover and a tag with its photograph */
+.hs { position: absolute; transform: translate(-50%, -50%); width: 3.4%; height: 8.4%; padding: 0; cursor: pointer; text-decoration: none;
+      opacity: 0; pointer-events: none; transition: opacity .6s ease; border-radius: 6px; outline-offset: 4px; }
+.stage.live .hs { opacity: 1; pointer-events: auto; }
+.hs::before { content: ""; position: absolute; inset: -18% -40%; border-radius: 50%; pointer-events: none; mix-blend-mode: screen;
+              background: radial-gradient(closest-side, color-mix(in srgb, var(--lamp) 70%, transparent), transparent 75%);
+              opacity: 0; transition: opacity .35s ease; }
+.hs:hover::before, .hs:focus-visible::before { opacity: .55; }
+.hs i { position: absolute; left: 50%; top: 58%; width: 12px; height: 12px; margin: -6px 0 0 -6px; border-radius: 50%;
+        border: 1px solid var(--overcast); background: color-mix(in srgb, var(--overcast) 40%, transparent);
+        box-shadow: 0 0 0 1px color-mix(in srgb, var(--timber) 35%, transparent); transition: transform .25s ease, background-color .25s ease; }
+.hs i::after { content: ""; position: absolute; inset: -6px; border-radius: 50%; border: 1px solid color-mix(in srgb, var(--overcast) 60%, transparent); }
+:root:not(.motion-off) .hs i::after { animation: ring 2.8s ease-out infinite; }
+.hs:nth-of-type(3n+2) i::after { animation-delay: .9s; } .hs:nth-of-type(3n) i::after { animation-delay: 1.8s; }
+@keyframes ring { 0% { transform: scale(.6); opacity: .9 } 70% { transform: scale(1.4); opacity: 0 } 100% { opacity: 0 } }
+.hs:hover i, .hs:focus-visible i { transform: scale(1.25); background: var(--lamp); border-color: var(--lamp); }
+.hs .tag { position: absolute; left: 50%; bottom: calc(100% + 10px); transform: translate(-50%, 6px); display: grid;
+           grid-template-columns: 40px auto; grid-template-rows: auto auto; column-gap: 10px; align-items: center; white-space: nowrap;
+           background: var(--overcast); color: var(--timber); padding: 6px 12px 6px 6px; pointer-events: none; opacity: 0; z-index: 3;
+           transition: opacity .2s ease, transform .25s ease; box-shadow: 0 10px 30px -12px rgba(0,0,0,.6); }
+.hs .tag img { grid-row: 1 / 3; width: 40px; height: 40px; object-fit: cover; display: block; }
+.hs .tag b { font: 460 14px/1.1 var(--sans); font-stretch: 106%; align-self: end; }
+.hs .tag em { font: 400 10px/1.2 var(--mono); font-style: normal; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft); align-self: start; }
+.hs:hover .tag, .hs:focus-visible .tag { opacity: 1; transform: translate(-50%, 0); }
+@media (hover: none) { .hs .tag { display: none; } }
+
+/* which ending the walk has: "full" walks into the shop and parks on the jars (the pitch); "outside"
+   stops at the door (the launch-safe version, if the client's lawyer says the inside may not be public) */
+.runway[data-walk="full"] .only-outside, .runway[data-walk="outside"] .only-full { display: none !important; }

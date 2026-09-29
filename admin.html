@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin — the shelf — Cloud Nine Clinical</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,300..600&family=Fragment+Mono&display=swap">
+<link rel="stylesheet" href="assets/site.css?v=20260929g">
+<link rel="stylesheet" href="assets/products/products.css?v=2">
+</head>
+<body>
+<header class="bar solid">
+  <a class="mark" href="experience.html">CLOUD NINE<span>Admin</span></a>
+  <nav aria-label="Main"><a href="cultivars.html">View the shelf</a><a href="experience.html#counter">The counter</a></nav>
+</header>
+
+<!-- THE SHELF, EDITABLE. Reads data/products.json; every save writes the whole list back through the
+     local server (shoot/serve.py: PUT /api/products, POST /api/upload), which validates it, keeps a
+     backup at data/products.backup.json and answers only to this machine. On a static host this page
+     is read-only; for launch the same list moves into the clinic's CMS or database. -->
+<main class="adm wrap">
+  <div class="top">
+    <div><p class="label">The shelf</p><h1 style="margin-top:10px">Cultivars</h1></div>
+    <button class="btn solid" id="add" type="button">Add a cultivar <span class="arr">+</span></button>
+  </div>
+  <p class="msg" id="msg" hidden></p>
+  <table>
+    <thead><tr><th>Jar</th><th></th><th>Name</th><th>Type</th><th>THC</th><th>CBD</th><th>Stock</th><th></th></tr></thead>
+    <tbody id="rows"></tbody>
+  </table>
+
+  <dialog id="dlg">
+    <form id="form" method="dialog">
+      <h2 class="d-m full" id="dlg-title">Edit</h2>
+      <label>Name<input name="name" required maxlength="40"></label>
+      <label>Page address (id)<input name="id" required pattern="[a-z0-9]+(-[a-z0-9]+)*" title="lower-case words joined by hyphens"></label>
+      <label>Type<select name="type"><option>Indica</option><option>Hybrid</option><option>Sativa</option></select></label>
+      <label>Indica share, %<input name="indica" type="number" min="0" max="100" step="1" required></label>
+      <label>THC, %<input name="thc" type="number" min="0" max="100" step="0.1" required></label>
+      <label>CBD, %<input name="cbd" type="number" min="0" max="100" step="0.1" required></label>
+      <label>Jar, grams<input name="jar_g" type="number" min="1" max="1000" step="1" required></label>
+      <label>Grown<input name="grown" maxlength="40" placeholder="Indoor, Greenhouse…"></label>
+      <label>Stock<select name="stock"><option value="in">In stock</option><option value="low">Low stock</option><option value="out">Out of stock</option></select></label>
+      <label>Jar on the shelf<input name="slot" type="number" min="1" step="1" required></label>
+      <label class="full">Notes<textarea name="notes" maxlength="600" placeholder="Appearance, aroma, how it is grown, dried and cured. No claims about effects."></textarea></label>
+      <div class="full">
+        <p class="label" style="margin-bottom:8px">Terpenes (name, %)</p>
+        <div style="display:grid;gap:8px" id="terps"></div>
+      </div>
+      <div class="full">
+        <p class="label" style="margin-bottom:8px">Photograph</p>
+        <div class="drop" id="drop" tabindex="0" role="button" aria-label="Choose a photograph">
+          <img id="thumb" alt=""><span>Drop a photograph here, or click to choose one. JPG, PNG, WebP or AVIF, up to 12 MB.</span>
+        </div>
+        <input type="file" id="file" accept="image/jpeg,image/png,image/webp,image/avif" hidden>
+      </div>
+      <label>Photo credit, name<input name="credit_by" maxlength="80"></label>
+      <label>Photo credit, link<input name="credit_url" type="url" maxlength="300"></label>
+      <div class="foot2">
+        <button class="btn line" type="button" id="cancel">Cancel</button>
+        <button class="btn solid" type="submit" id="save">Save to the shelf</button>
+      </div>
+    </form>
+  </dialog>
+</main>
+
+<script src="assets/products/products.js?v=2"></script>
+<script>
+(async function () {
+  'use strict';
+  const $ = s => document.getElementById(s);
+  const form = $('form'), dlg = $('dlg');
+  let list = [], editing = null, image = '';
+
+  const today = () => { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
+  const slug = s => s.toLowerCase().normalize('NFKD').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+  function say(text, kind) { const m = $('msg'); m.textContent = text; m.className = 'msg ' + (kind || ''); m.hidden = !text; }
+
+  async function refresh() { list = (await C9.load(true)).products.map(p => JSON.parse(JSON.stringify(p))); draw(); }
+  function draw() {
+    list.sort((a, b) => a.slot - b.slot);
+    $('rows').innerHTML = list.map((p, i) =>
+      '<tr><td>' + String(p.slot).padStart(2, '0') + '</td><td><img src="' + C9.esc(p.image) + '" alt=""></td>' +
+      '<td><a href="' + C9.page(p) + '" target="_blank">' + C9.esc(p.name) + '</a></td><td>' + p.type + '</td>' +
+      '<td>' + C9.pct(p.thc) + '</td><td>' + C9.pct(p.cbd) + '</td><td>' + (C9.STOCK[p.stock] || '') + '</td>' +
+      '<td style="text-align:right;white-space:nowrap"><button class="sm" data-edit="' + i + '">Edit</button> <button class="sm" data-del="' + i + '">Remove</button></td></tr>').join('');
+  }
+
+  async function publish(next, done) {
+    try {
+      const r = await fetch('/api/products', { method: 'PUT', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ updated: today(), products: next }) });
+      const j = await r.json().catch(() => ({}));
+      if (!r.ok) { say(j.error || ('Could not save (' + r.status + '). Editing only works on the local server.'), 'err'); return false; }
+      say(done + ' · the shelf now has ' + j.count + ' cultivar' + (j.count === 1 ? '' : 's') + '.', 'ok');
+      await refresh(); return true;
+    } catch (e) { say('Could not reach the local server. Editing only works on it (shoot/serve.py).', 'err'); return false; }
+  }
+
+  function terpRows(t) {
+    const rows = (t || []).concat([{}, {}, {}]).slice(0, 4);
+    $('terps').innerHTML = rows.map(x => '<div class="terp"><input placeholder="e.g. Myrcene" value="' + C9.esc(x.name || '') + '" maxlength="30">' +
+      '<input type="number" min="0" max="10" step="0.1" placeholder="%" value="' + (x.pct != null ? x.pct : '') + '"></div>').join('');
+  }
+  function open(p) {
+    editing = p; image = p ? p.image : '';
+    $('dlg-title').textContent = p ? 'Edit ' + p.name : 'Add a cultivar';
+    const d = p || { name: '', id: '', type: 'Hybrid', indica: 50, thc: 20, cbd: 0.5, jar_g: 10, grown: 'Indoor', stock: 'in',
+                     slot: Math.max(0, ...list.map(x => x.slot)) + 1, notes: '', credit: {} };
+    for (const k of ['name', 'id', 'type', 'indica', 'thc', 'cbd', 'jar_g', 'grown', 'stock', 'slot', 'notes']) form.elements[k].value = d[k] != null ? d[k] : '';
+    form.elements.credit_by.value = (d.credit && d.credit.by) || ''; form.elements.credit_url.value = (d.credit && d.credit.url) || '';
+    $('thumb').src = image || ''; terpRows(d.terpenes);
+    dlg.showModal(); form.elements.name.focus();
+  }
+  form.elements.name.addEventListener('input', () => { if (!editing) form.elements.id.value = slug(form.elements.name.value); });
+
+  // photographs: drop or pick, uploaded straight away so the preview is the real stored file
+  async function upload(f) {
+    if (!f) return;
+    if (f.size > 12e6) return say('That photograph is over 12 MB.', 'err');
+    const ext = (f.name.split('.').pop() || 'jpg').toLowerCase();
+    const name = (slug(form.elements.name.value) || 'cultivar') + '.' + ext;
+    try {
+      const r = await fetch('/api/upload?name=' + encodeURIComponent(name), { method: 'POST', body: f, headers: { 'Content-Type': f.type || 'application/octet-stream' } });
+      const j = await r.json();
+      if (!r.ok) return say(j.error || 'Upload failed.', 'err');
+      image = j.path; $('thumb').src = image + '?t=' + Date.now(); say('Photograph uploaded. Save to put it on the shelf.', 'ok');
+    } catch (e) { say('Could not reach the local server to upload.', 'err'); }
+  }
+  const drop = $('drop');
+  drop.addEventListener('click', () => $('file').click());
+  drop.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); $('file').click(); } });
+  $('file').addEventListener('change', e => upload(e.target.files[0]));
+  drop.addEventListener('dragover', e => { e.preventDefault(); drop.classList.add('over'); });
+  drop.addEventListener('dragleave', () => drop.classList.remove('over'));
+  drop.addEventListener('drop', e => { e.preventDefault(); drop.classList.remove('over'); upload(e.dataTransfer.files[0]); });
+
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    const f = form.elements, n = v => Number(v);
+    const p = Object.assign({}, editing || {}, {
+      id: f.id.value.trim(), name: f.name.value.trim(), type: f.type.value, indica: Math.round(n(f.indica.value)),
+      thc: n(f.thc.value), cbd: n(f.cbd.value), jar_g: Math.round(n(f.jar_g.value)), grown: f.grown.value.trim(),
+      stock: f.stock.value, slot: Math.round(n(f.slot.value)), notes: f.notes.value.trim(), image,
+      terpenes: [...$('terps').children].map(r => ({ name: r.children[0].value.trim(), pct: n(r.children[1].value) }))
+                  .filter(t => t.name && t.pct > 0),
+      credit: { by: f.credit_by.value.trim(), url: f.credit_url.value.trim(), source: (editing && editing.credit && editing.credit.source) || '' }
+    });
+    const next = list.filter(x => x !== editing);
+    // a taken jar swaps with the one being edited rather than refusing the save
+    const clash = next.find(x => x.slot === p.slot);
+    if (clash) clash.slot = editing ? editing.slot : Math.max(0, ...list.map(x => x.slot)) + 1;
+    next.push(p);
+    if (await publish(next, (editing ? 'Saved ' : 'Added ') + p.name)) dlg.close();
+  });
+  $('cancel').addEventListener('click', () => dlg.close());
+
+  $('add').addEventListener('click', () => open(null));
+  $('rows').addEventListener('click', async e => {
+    const ed = e.target.closest('[data-edit]'), del = e.target.closest('[data-del]');
+    if (ed) open(list[+ed.dataset.edit]);
+    if (del) {
+      const p = list[+del.dataset.del];
+      if (!confirm('Remove ' + p.name + ' from the shelf? Its photograph file is kept.')) return;
+      await publish(list.filter(x => x !== p), 'Removed ' + p.name);
+    }
+  });
+
+  await refresh();
+})();
+</script>
+</body>
+</html>

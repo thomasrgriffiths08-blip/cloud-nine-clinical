@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cultivar — Cloud Nine Clinical</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#16181A">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,300..600&family=Fragment+Mono&display=swap">
+<link rel="stylesheet" href="assets/site.css?v=20260929g">
+<link rel="stylesheet" href="assets/products/products.css?v=2">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="bar solid">
+  <a class="mark" href="experience.html" aria-label="Cloud Nine Clinical, home">CLOUD NINE<span>Clinical</span></a>
+  <nav aria-label="Main">
+    <a class="hide-sm" href="experience.html#counter">The counter</a>
+    <a href="cultivars.html"><span class="long">All cultivars</span><span class="short">All</span></a>
+    <a class="btn" href="{{BOOKING_URL}}"><span class="long">Request a consultation</span><span class="short">Enquire</span></a>
+  </nav>
+</header>
+
+<!-- A JAR'S OWN PAGE. Everything below is filled from data/products.json by ?id=. Demo photographs are
+     Pexels (licensed for commercial use); before launch they are replaced with the clinic's own. -->
+<main class="pg" id="main">
+  <article class="jar" id="jar" hidden>
+    <div class="shot">
+      <img id="img" alt="" fetchpriority="high">
+      <div class="cap">
+        <p id="credit"></p>
+        <nav class="step" aria-label="Other jars"><a id="prev" href="#" aria-label="Previous jar">←</a><a id="next" href="#" aria-label="Next jar">→</a></nav>
+      </div>
+    </div>
+    <div class="info">
+      <div>
+        <p class="crumbs"><a href="experience.html#counter">The counter</a><span>/</span><a id="crumb-type" href="cultivars.html"></a><span>/</span><span id="slot"></span></p>
+        <h1 class="d-xl" id="name"></h1>
+      </div>
+      <div class="lean" id="lean" aria-label="Indica to sativa">
+        <span>Indica</span><span class="line"><b></b><i></i></span><span>Sativa</span>
+      </div>
+      <dl class="figs">
+        <div><dt class="label">THC</dt><dd id="thc"></dd></div>
+        <div><dt class="label">CBD</dt><dd id="cbd"></dd></div>
+        <div><dt class="label">Jar</dt><dd id="jarg"></dd></div>
+        <div><dt class="label">Grown</dt><dd id="grown" class="small"></dd></div>
+      </dl>
+      <div>
+        <p class="label" style="margin-bottom:14px">Terpene profile</p>
+        <div class="terps" id="terps"></div>
+      </div>
+      <p class="notes" id="notes"></p>
+      <p class="stock" id="stock"></p>
+      <div class="act">
+        <a class="btn solid" href="{{BOOKING_URL}}">Discuss it at your consultation <span class="arr">→</span></a>
+        <small>Dispensed only against a prescription written for you after a consultation. Nothing here is sold over the counter.</small>
+      </div>
+      <div class="shelf">
+        <p class="label">Also on the shelf</p>
+        <div class="row" id="also"></div>
+      </div>
+    </div>
+  </article>
+
+  <section class="wrap" id="missing" hidden style="padding: 120px 0">
+    <p class="label">Not on the shelf</p>
+    <h1 class="d-l" style="margin-top:14px">That jar isn't here.</h1>
+    <p style="margin-top:18px"><a class="btn solid" href="cultivars.html">See all cultivars <span class="arr">→</span></a></p>
+  </section>
+</main>
+
+<script src="assets/products/products.js?v=2"></script>
+<script>
+(async function () {
+  'use strict';
+  const $ = s => document.getElementById(s);
+  const { products } = await C9.load();
+  const id = new URLSearchParams(location.search).get('id');
+  const i = products.findIndex(p => p.id === id);
+  if (i < 0) { $('missing').hidden = false; document.title = 'Not found — Cloud Nine Clinical'; return; }
+  const p = products[i];
+  document.title = p.name + ' — ' + p.type + ' — Cloud Nine Clinical';
+
+  $('img').src = p.image; $('img').alt = 'Photograph of ' + p.name + ' (demonstration image)';
+  const cr = p.credit || {};
+  const who = C9.esc(cr.by) + (cr.source ? ' on ' + C9.esc(cr.source) : '');
+  $('credit').innerHTML = cr.by
+    ? (cr.source === 'Pexels' ? 'Demo photograph · ' : 'Photograph · ') + (cr.url ? '<a href="' + C9.esc(cr.url) + '" rel="noopener" target="_blank">' + who + '</a>' : who)
+    : 'Jar ' + String(p.slot).padStart(2, '0');
+  $('crumb-type').textContent = p.type; $('crumb-type').href = 'cultivars.html?type=' + p.type;
+  $('slot').textContent = 'Jar ' + String(p.slot).padStart(2, '0');
+  $('name').textContent = p.name;
+
+  const lean = C9.lean(p), line = $('lean').querySelector('.line');
+  line.querySelector('i').style.left = lean.at + '%';
+  line.querySelector('b').style.left = lean.at + '%';
+  line.querySelector('b').textContent = lean.label;
+  $('lean').setAttribute('aria-label', p.indica + '% indica, ' + (100 - p.indica) + '% sativa');
+
+  $('thc').textContent = C9.pct(p.thc); $('cbd').textContent = C9.pct(p.cbd);
+  $('jarg').textContent = p.jar_g + ' g'; $('grown').textContent = p.grown || '—';
+
+  $('jar').hidden = false;   // visible before the bars are set, so they can grow from zero
+  const max = Math.max(1.5, ...p.terpenes.map(t => t.pct));
+  $('terps').innerHTML = p.terpenes.map(t =>
+    '<div class="row"><span>' + C9.esc(t.name) + '</span><span class="bar"><i data-w="' + (t.pct / max * 100).toFixed(1) + '"></i></span><em>' + t.pct.toFixed(1) + '%</em></div>').join('');
+  // force a style flush so the bars grow from zero, without depending on an animation frame
+  void $('terps').offsetWidth;
+  document.querySelectorAll('#terps i').forEach(el => { el.style.width = el.dataset.w + '%'; });
+
+  $('notes').textContent = p.notes;
+  $('stock').textContent = C9.STOCK[p.stock] || ''; $('stock').className = 'stock ' + p.stock;
+
+  const prev = products[(i - 1 + products.length) % products.length], next = products[(i + 1) % products.length];
+  $('prev').href = C9.page(prev); $('prev').title = prev.name;
+  $('next').href = C9.page(next); $('next').title = next.name;
+  addEventListener('keydown', e => {
+    if (e.target.closest('input, textarea, select')) return;
+    if (e.key === 'ArrowLeft') location.href = C9.page(prev);
+    if (e.key === 'ArrowRight') location.href = C9.page(next);
+  });
+
+  // same type first, then the rest, never itself
+  const also = products.filter(q => q.id !== p.id).sort((a, b) => (b.type === p.type) - (a.type === p.type) || a.slot - b.slot).slice(0, 4);
+  $('also').innerHTML = also.map(q =>
+    '<a class="card' + (q.stock === 'out' ? ' out' : '') + '" href="' + C9.page(q) + '"><div class="img"><img src="' + C9.esc(q.image) + '" alt="" loading="lazy"></div>' +
+    '<div class="t">' + C9.esc(q.name) + '<span>' + C9.pct(q.thc) + '</span></div><div class="m">' + q.type + '</div></a>').join('');
+
+  $('jar').hidden = false;
+})();
+</script>
+</body>
+</html>
