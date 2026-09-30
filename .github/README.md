@@ -10,7 +10,10 @@ cultivar, with "View more" for the full page.
 | `cultivars.html` | Every cultivar, filterable by Indica / Hybrid / Sativa |
 | `cultivar.html?id=…` | One cultivar: lean, THC, CBD, terpenes, notes, stock |
 | `admin.html` | Add, edit or remove cultivars and assign them to jars (local server only) |
-| `patients.html` | The demo patient sign-in |
+| `patients.html` | The demo patient sign-in (any email and password, or "Enter the demonstration") |
+| `patient.html` | The demo patient area: next appointment, current prescription (from `data/products.json`), repeat request, messages |
+| `consultation.html` | Request a consultation: the form, checked in the browser; nothing is sent |
+| `fees.html`, `privacy.html`, `complaints.html`, `accessibility.html` | The policy pages linked from every footer |
 
 ## Live demo
 

@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Your patient area — Cloud Nine Clinical</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#16181A">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,300..600&family=Fragment+Mono&display=swap">
+<link rel="stylesheet" href="assets/site.css?v=20260929l">
+<link rel="stylesheet" href="assets/products/products.css?v=2">
+<link rel="stylesheet" href="assets/pages.css?v=1">
+<script>
+  // the demo gate: only reachable after signing in on patients.html (this tab only)
+  try { if (sessionStorage.getItem('c9-demo-patient') !== '1') location.replace('patients.html'); } catch (e) {}
+</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="bar solid">
+  <a class="mark" href="experience.html" aria-label="Cloud Nine Clinical, home">CLOUD NINE<span>Patients</span></a>
+  <nav aria-label="Main">
+    <a class="hide-sm" href="experience.html#counter">The counter</a>
+    <a class="hide-sm" href="cultivars.html">All cultivars</a>
+    <a href="patients.html" data-signout>Sign out</a>
+    <a class="btn" href="consultation.html"><span class="long">Request a consultation</span><span class="short">Enquire</span></a>
+  </nav>
+</header>
+
+<!-- THE PATIENT AREA, AS A DEMONSTRATION. Everything is local: the dates are worked out from today,
+     the prescription is one product read from data/products.json, and the repeat request and sign-out
+     only touch this tab's sessionStorage. In production this is the clinic's patient portal. -->
+<main class="pg" id="main">
+  <div class="wrap">
+    <div class="pa-head">
+      <div>
+        <p class="label">Patient area</p>
+        <h1 class="d-l" id="hello">Welcome back.</h1>
+        <p class="who" id="who">Welcome back. This is a demonstration patient record.</p>
+      </div>
+      <p class="pa-demo">Demonstration record · not a real patient</p>
+    </div>
+
+    <div class="pa">
+      <section class="appt" aria-labelledby="appt-h">
+        <p class="label">Next appointment</p>
+        <h2 id="appt-h">Follow-up consultation</h2>
+        <p class="when" id="appt-date"></p>
+        <p class="time" id="appt-time">10:30 · At the clinic</p>
+        <dl>
+          <dt>With</dt><dd>{{CLINICIAN_NAME}}, specialist clinician</dd>
+          <dt>Where</dt><dd>{{ADDRESS}}</dd>
+          <dt>Bring</dt><dd>Anything you have noted since your last consultation, and a list of any other medicines you take.</dd>
+        </dl>
+        <p class="small">To change or cancel, give us at least {{NOTICE_PERIOD}} notice, on {{PHONE}}. <a href="fees.html#cancellations">About cancellations</a></p>
+      </section>
+
+      <section class="rx" aria-labelledby="rx-h">
+        <div>
+          <p class="label">Your current prescription</p>
+          <h2 class="vh" id="rx-h">Your current prescription</h2>
+        </div>
+        <p class="loading" id="rx-loading" role="status">Loading your prescription…</p>
+        <div id="rx-body" hidden>
+          <a class="item" id="rx-link" href="cultivars.html">
+            <div class="ph"><img id="rx-img" alt=""></div>
+            <div>
+              <span class="typechip" id="rx-type"></span>
+              <h3 id="rx-name"></h3>
+              <p class="m" id="rx-figs"></p>
+            </div>
+          </a>
+          <dl style="margin-top:20px">
+            <dt>Prescribed</dt><dd id="rx-date"></dd>
+            <dt>Quantity</dt><dd id="rx-qty"></dd>
+            <dt>Directions</dt><dd>As set out in your written plan</dd>
+            <dt>Review due</dt><dd id="rx-review"></dd>
+            <dt>At the clinic</dt><dd id="rx-stock"></dd>
+          </dl>
+          <p style="margin-top:16px"><a class="more" id="rx-more" href="cultivars.html">View its page <span class="arr">→</span></a></p>
+        </div>
+
+        <div id="repeat">
+          <button class="btn solid" type="button" id="repeat-btn" hidden>Request a repeat prescription</button>
+          <div class="box" id="repeat-confirm" hidden>
+            <p id="repeat-q"></p>
+            <div class="acts">
+              <button class="btn solid" type="button" id="repeat-send">Send request</button>
+              <button class="btn line" type="button" id="repeat-cancel">Cancel</button>
+            </div>
+          </div>
+          <div class="sent" id="repeat-sent" tabindex="-1" hidden>
+            <b id="repeat-when">Repeat requested</b>
+            <p>Your clinician reviews every repeat request before anything is issued, and we let you know when it is ready. If anything has changed since your last consultation, tell us: your clinician may want to talk it through first.</p>
+            <p><b>Demonstration: nothing was sent.</b></p>
+          </div>
+        </div>
+      </section>
+
+      <section class="wide" aria-labelledby="msgs-h">
+        <p class="label">From the clinic</p>
+        <h2 id="msgs-h">Messages</h2>
+        <ul class="msgs" id="msgs"></ul>
+      </section>
+    </div>
+
+    <div class="pa-foot">
+      <p>Need to talk to someone? Call {{PHONE}}, {{HOURS}}. If you need help now, call NHS 111, or 999 in an emergency.</p>
+      <a class="btn line" href="patients.html" data-signout>Sign out</a>
+    </div>
+  </div>
+</main>
+
+<footer class="foot slim">
+  <p class="word" aria-hidden="true">CLOUD NINE</p>
+  <div class="wrap legal">
+    <p>Cloud Nine Clinical Ltd · Company No. {{COMPANY_NO}} · Registered office {{REG_OFFICE}} · CQC {{CQC_NUMBER}}</p>
+    <nav aria-label="Policies"><a href="privacy.html">Privacy</a><a href="complaints.html">Complaints</a><a href="fees.html">Fees</a><a href="accessibility.html">Accessibility</a></nav>
+  </div>
+</footer>
+
+<script src="assets/products/products.js?v=2"></script>
+<script>
+(function () {
+  'use strict';
+  const $ = s => document.getElementById(s);
+  const get = k => { try { return sessionStorage.getItem(k); } catch (e) { return null; } };
+  const put = (k, v) => { try { v == null ? sessionStorage.removeItem(k) : sessionStorage.setItem(k, v); } catch (e) {} };
+
+  /* dates are worked out from today, on the local clock, so the demo never goes stale */
+  const now = new Date();
+  const day = n => { const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() + n); return d; };
+  const weekday = d => { const w = d.getDay(); if (w === 6) d.setDate(d.getDate() + 2); if (w === 0) d.setDate(d.getDate() + 1); return d; };
+  const long = d => d.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' });
+  const med = d => d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+  const short = d => d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+  const appt = weekday(day(9)), prescribed = weekday(day(-26)), booked = day(-3), yesterday = day(-1);
+
+  const h = now.getHours();
+  $('hello').textContent = h < 12 ? 'Good morning.' : h < 18 ? 'Good afternoon.' : 'Good evening.';
+  const email = get('c9-demo-email');
+  $('who').textContent = email ? 'Welcome back. Signed in as ' + email + '.' : 'Welcome back. This is a demonstration patient record.';
+
+  $('appt-date').textContent = long(appt);
+
+  /* messages from the clinic: newest first */
+  const msgs = [
+    { d: yesterday, from: 'Clinical team', t: 'Before your follow-up', fresh: true,
+      b: 'It helps to note anything you want to talk about beforehand: what has changed, anything you have noticed, and any other medicines you have started or stopped.' },
+    { d: booked, from: 'Reception', t: 'Your follow-up is booked',
+      b: 'We have booked your follow-up for ' + long(appt) + ' at 10:30, at the clinic. If you need to change it, please give us {{NOTICE_PERIOD}} notice.' },
+    { d: prescribed, from: 'Clinical team', t: 'Your written plan',
+      b: 'The written plan from your consultation on ' + long(prescribed) + ' has been emailed to you. As you agreed, a copy has gone to your GP.' }
+  ];
+  function renderMsgs() {
+    $('msgs').innerHTML = msgs.map(m =>
+      '<li' + (m.fresh ? ' class="new"' : '') + '><p class="d"><i>' + short(m.d) + '</i><i>' + C9.esc(m.from) + '</i></p>' +
+      '<div><b>' + (m.fresh ? '<span class="vh">New: </span>' : '') + C9.esc(m.t) + '</b><p>' + C9.esc(m.b) + '</p></div></li>').join('');
+  }
+  renderMsgs();
+
+  /* the current prescription: one product from data/products.json */
+  let rx = null;
+  C9.load().then(({ products }) => {
+    rx = products.find(p => p.stock !== 'out') || products[0];
+    if (!rx) throw new Error('no products');
+    $('rx-img').src = rx.image; $('rx-img').alt = 'Photograph of ' + rx.name + ' (demonstration image)';
+    $('rx-type').textContent = rx.type;
+    $('rx-name').textContent = rx.name;
+    $('rx-figs').textContent = 'THC ' + C9.pct(rx.thc) + ' · CBD ' + C9.pct(rx.cbd);
+    $('rx-link').href = $('rx-more').href = C9.page(rx);
+    $('rx-more').setAttribute('aria-label', 'View the page for ' + rx.name);
+    $('rx-date').textContent = med(prescribed) + ', by {{CLINICIAN_NAME}}';
+    $('rx-qty').textContent = rx.jar_g + ' g';
+    $('rx-review').textContent = long(appt);
+    $('rx-stock').textContent = C9.STOCK[rx.stock] || '';
+    $('rx-loading').hidden = true; $('rx-body').hidden = false;
+    const sent = +get('c9-demo-repeat');
+    if (sent) showSent(new Date(sent), false); else $('repeat-btn').hidden = false;
+  }).catch(() => {
+    $('rx-loading').textContent = 'Your prescription could not be loaded just now. Please refresh the page, or call us on {{PHONE}}.';
+  });
+
+  /* a repeat request: ask, confirm, then say what happens. Nothing is sent. */
+  function showSent(at, focus) {
+    $('repeat-btn').hidden = true; $('repeat-confirm').hidden = true; $('repeat-sent').hidden = false;
+    $('repeat-when').textContent = 'Repeat requested, ' + short(at) + ' at ' + at.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+    if (!msgs.some(m => m.repeat)) {
+      msgs.forEach(m => { m.fresh = false; });
+      msgs.unshift({ d: at, from: 'Clinical team', t: 'Repeat request received', fresh: true, repeat: true,
+        b: 'Your request for a repeat of ' + rx.name + ' is with your clinician, who reviews it before anything is issued. We will be in touch if anything needs discussing first.' });
+      renderMsgs();
+    }
+    if (focus) $('repeat-sent').focus();
+  }
+  $('repeat-btn').addEventListener('click', () => {
+    $('repeat-q').textContent = 'Request a repeat of ' + rx.name + ', ' + rx.jar_g + ' g? Your clinician reviews every request before anything is issued.';
+    $('repeat-btn').hidden = true; $('repeat-confirm').hidden = false;
+    $('repeat-send').focus();
+  });
+  $('repeat-cancel').addEventListener('click', () => {
+    $('repeat-confirm').hidden = true; $('repeat-btn').hidden = false; $('repeat-btn').focus();
+  });
+  $('repeat-send').addEventListener('click', () => {
+    const at = new Date(); put('c9-demo-repeat', String(at.getTime())); showSent(at, true);
+  });
+
+  /* signing out clears this tab's demo state, then the link carries on to the sign-in page */
+  document.querySelectorAll('[data-signout]').forEach(a => a.addEventListener('click', () => {
+    ['c9-demo-patient', 'c9-demo-email', 'c9-demo-repeat'].forEach(k => put(k, null));
+  }));
+})();
+</script>
+</body>
+</html>

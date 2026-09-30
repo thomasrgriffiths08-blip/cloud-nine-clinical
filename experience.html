@@ -24,10 +24,10 @@
 <header class="bar" id="bar">
   <a class="mark" href="#top" aria-label="Cloud Nine Clinical, home">CLOUD NINE<span>Clinical</span></a>
   <nav aria-label="Main">
-    <a class="hide-sm" href="#consultation">Consultation</a>
-    <a class="hide-sm" href="#information">The clinic</a>
+    <a class="hide-sm" href="#counter">The counter</a>
+    <a class="hide-sm" href="cultivars.html">All cultivars</a>
     <a href="patients.html"><span class="long">Patient sign-in</span><span class="short">Sign in</span></a>
-    <a class="btn" href="{{BOOKING_URL}}"><span class="long">Request a consultation</span><span class="short">Enquire</span></a>
+    <a class="btn" href="consultation.html"><span class="long">Request a consultation</span><span class="short">Enquire</span></a>
   </nav>
 </header>
 
@@ -83,7 +83,7 @@
       <p class="sub"><span class="long">Click any jar to see it. Nothing here is sold over the counter.</span><span class="short">Tap a jar to see it. Nothing is sold over the counter.</span></p>
       <div class="acts">
         <a class="btn light" href="cultivars.html">All cultivars <span class="arr">→</span></a>
-        <a class="btn line" href="{{BOOKING_URL}}">Request a consultation</a>
+        <a class="btn line" href="consultation.html">Request a consultation</a>
       </div>
     </div>
 
@@ -92,7 +92,7 @@
       <h2 class="d-l">The door opens<br>by appointment.</h2>
       <p class="sub">Nothing here is sold over the counter. Prescribed to you by name, or not at all.</p>
       <div class="acts">
-        <a class="btn light" href="{{BOOKING_URL}}">Request a consultation <span class="arr">→</span></a>
+        <a class="btn light" href="consultation.html">Request a consultation <span class="arr">→</span></a>
         <a class="btn line" href="patients.html">Patient sign-in</a>
       </div>
     </div>
@@ -138,7 +138,7 @@
       </div>
       <div class="side">
         <p>No forms to fight, no counter to reach. A conversation, a decision, and a plan written down.</p>
-        <a class="btn solid" href="{{BOOKING_URL}}">Request an initial consultation <span class="arr">→</span></a>
+        <a class="btn solid" href="consultation.html">Request an initial consultation <span class="arr">→</span></a>
         <p class="disclose">{{DISCLOSURE}} A consultation does not guarantee any particular treatment; that decision is made by a clinician, with you.</p>
       </div>
     </div>
@@ -182,8 +182,8 @@
       <div>
         <p>An initial consultation with a specialist. Every fee is listed in full before you book.</p>
         <div class="acts">
-          <a class="btn light" href="{{BOOKING_URL}}">Request a consultation <span class="arr">→</span></a>
-          <a class="btn line" href="tel:{{PHONE}}">{{PHONE}}</a>
+          <a class="btn light" href="consultation.html">Request a consultation <span class="arr">→</span></a>
+          <a class="btn line" href="consultation.html?by=phone">Request a call</a>
         </div>
       </div>
     </div>
@@ -191,11 +191,11 @@
   <p class="word" aria-hidden="true">CLOUD NINE</p>
   <div class="wrap legal">
     <p>Cloud Nine Clinical Ltd · Company No. {{COMPANY_NO}} · Registered office {{REG_OFFICE}} · CQC {{CQC_NUMBER}}</p>
-    <nav aria-label="Policies"><a href="{{PRIVACY_URL}}">Privacy</a><a href="{{COMPLAINTS_URL}}">Complaints</a><a href="{{FEES_URL}}">Fees</a><a href="{{ACCESS_URL}}">Accessibility</a></nav>
+    <nav aria-label="Policies"><a href="privacy.html">Privacy</a><a href="complaints.html">Complaints</a><a href="fees.html">Fees</a><a href="accessibility.html">Accessibility</a></nav>
   </div>
 </footer>
 
-<script src="assets/walk/walk.js?v=20260929k"></script>
+<script src="assets/walk/walk.js?v=20260930a"></script>
 <script src="assets/products/products.js?v=2"></script>
 <script>
 (function () {
@@ -317,6 +317,15 @@
     { rootMargin: '0px 0px -8% 0px' });
   document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 })();
+</script>
+<script>
+/* The bar's "The counter" link, on this page: walk to the counter the way the rail does (smoothly unless
+   motion is reduced). Kept apart from the walk script above; it only calls the walk's public scrollTo. */
+document.querySelectorAll('a[href="#counter"]').forEach(a => a.addEventListener('click', e => {
+  const w = window.cloudNineWalk; if (!w) return;
+  e.preventDefault();
+  w.scrollTo(1, !document.documentElement.classList.contains('motion-off'));
+}));
 </script>
 </body>
 </html>

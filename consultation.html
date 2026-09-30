@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Request a consultation — Cloud Nine Clinical</title>
+<meta name="description" content="Request an initial consultation with a specialist clinician at Cloud Nine Clinical. A member of the clinical team gets in touch to check we are the right clinic for you.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#16181A">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,300..600&family=Fragment+Mono&display=swap">
+<link rel="stylesheet" href="assets/site.css?v=20260929l">
+<link rel="stylesheet" href="assets/products/products.css?v=2">
+<link rel="stylesheet" href="assets/pages.css?v=1">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="bar solid">
+  <a class="mark" href="experience.html" aria-label="Cloud Nine Clinical, home">CLOUD NINE<span>Clinical</span></a>
+  <nav aria-label="Main">
+    <a class="hide-sm" href="experience.html#counter">The counter</a>
+    <a class="hide-sm" href="cultivars.html">All cultivars</a>
+    <a href="patients.html"><span class="long">Patient sign-in</span><span class="short">Sign in</span></a>
+    <a class="btn" href="consultation.html" aria-current="page"><span class="long">Request a consultation</span><span class="short">Enquire</span></a>
+  </nav>
+</header>
+
+<!-- THE REQUEST. In the demo nothing leaves the browser: the form is checked, then replaced by a
+     confirmation. For launch, onValid() posts to the clinic's booking system or CRM ({{BOOKING_ENDPOINT}}). -->
+<main class="pg" id="main">
+  <div class="wrap">
+    <div class="ix-head">
+      <div>
+        <p class="crumbs"><a href="experience.html">Home</a><span>/</span><span>Request a consultation</span></p>
+        <h1 class="d-l">Request a consultation.</h1>
+      </div>
+      <p>Tell us how to reach you. A member of the clinical team gets in touch to check we are the right clinic for you, then books your consultation with a specialist.</p>
+    </div>
+
+    <div class="req">
+      <div>
+        <form class="form" id="form" novalidate aria-labelledby="form-h">
+          <h2 class="vh" id="form-h">Your details</h2>
+          <div class="errsum" tabindex="-1" role="alert" aria-labelledby="errsum-h" hidden>
+            <h2 id="errsum-h">There is a problem</h2>
+            <ul></ul>
+          </div>
+
+          <div class="field" data-field="name">
+            <label for="f-name">Full name</label>
+            <p class="err" id="name-err" hidden></p>
+            <input class="input" id="f-name" name="name" type="text" autocomplete="name" spellcheck="false" maxlength="80">
+          </div>
+
+          <div class="two">
+            <div class="field" data-field="email">
+              <label for="f-email">Email address</label>
+              <p class="err" id="email-err" hidden></p>
+              <input class="input" id="f-email" name="email" type="email" autocomplete="email" inputmode="email" spellcheck="false" maxlength="120">
+            </div>
+            <div class="field" data-field="phone">
+              <label for="f-phone">Phone number</label>
+              <p class="err" id="phone-err" hidden></p>
+              <input class="input" id="f-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="24">
+            </div>
+          </div>
+
+          <fieldset class="field" data-field="contact">
+            <legend>How should we contact you?</legend>
+            <p class="err" id="contact-err" hidden></p>
+            <div class="opts">
+              <label class="opt"><input type="radio" name="contact" value="phone" id="f-contact-phone"><span>Phone</span></label>
+              <label class="opt"><input type="radio" name="contact" value="email" id="f-contact-email"><span>Email</span></label>
+            </div>
+          </fieldset>
+
+          <div class="field" data-field="time">
+            <label for="f-time">Best time to reach you</label>
+            <p class="hint" id="time-hint">Our lines are open {{HOURS}}.</p>
+            <p class="err" id="time-err" hidden></p>
+            <select class="input" id="f-time" name="time" aria-describedby="time-hint">
+              <option value="any">Any time</option>
+              <option value="morning">Morning</option>
+              <option value="afternoon">Afternoon</option>
+              <option value="evening">Early evening</option>
+            </select>
+          </div>
+
+          <div class="field" data-field="about">
+            <label for="f-about">What would you like to talk about? <span class="opt-l">(optional)</span></label>
+            <p class="hint" id="about-hint">A sentence or two is plenty. Please do not include detailed medical history here: your clinician will go through it with you, in private, at the consultation.</p>
+            <p class="err" id="about-err" hidden></p>
+            <textarea class="input" id="f-about" name="about" rows="4" maxlength="500" aria-describedby="about-hint about-count"></textarea>
+            <p class="count" id="about-count" aria-live="polite">You can enter up to 500 characters</p>
+          </div>
+
+          <fieldset class="field" data-field="gp" aria-describedby="gp-hint">
+            <legend>Do you have a referral from your GP?</legend>
+            <p class="hint" id="gp-hint">You do not need one to get in touch. It helps us plan the eligibility check.</p>
+            <p class="err" id="gp-err" hidden></p>
+            <div class="opts">
+              <label class="opt"><input type="radio" name="gp" value="yes" id="f-gp-yes"><span>Yes</span></label>
+              <label class="opt"><input type="radio" name="gp" value="no" id="f-gp-no"><span>No</span></label>
+              <label class="opt"><input type="radio" name="gp" value="unsure" id="f-gp-unsure"><span>Not sure</span></label>
+            </div>
+          </fieldset>
+
+          <div class="field" data-field="consent">
+            <p class="err" id="consent-err" hidden></p>
+            <label class="check" for="f-consent">
+              <input type="checkbox" id="f-consent" name="consent" value="yes">
+              <span>I agree to Cloud Nine Clinical using these details to contact me about this request, as set out in the <a href="privacy.html">privacy notice</a>.</span>
+            </label>
+          </div>
+
+          <div class="submit">
+            <button class="btn solid" type="submit">Send request <span class="arr">→</span></button>
+            <small>Demonstration site: this form does not send anything.</small>
+          </div>
+
+          <p class="urgent">This form is not for urgent medical help. If you need help now, call NHS 111 or go to <a href="https://111.nhs.uk/" rel="noopener">111.nhs.uk</a>. In an emergency, call 999.</p>
+        </form>
+
+        <!-- the confirmation: shown in place of the form -->
+        <section class="done" id="done" tabindex="-1" aria-labelledby="done-h" hidden>
+          <p class="label">Request received</p>
+          <h2 class="d-l" id="done-h">Thank you.</h2>
+          <p class="lede">We have your request. Here is what happens next.</p>
+          <ol class="next">
+            <li><div><b id="done-contact">The clinical team gets in touch within {{RESPONSE_TIME}}.</b><p id="done-how"></p></div></li>
+            <li><div><b>An eligibility check.</b><p>A few questions to make sure we are the right clinic for you. If we are not, we will say so plainly.</p></div></li>
+            <li><div><b>Your consultation.</b><p>With a specialist clinician, usually {{FIRST_APPT_LENGTH}}. Your history, what you have tried, what you want to change.</p></div></li>
+            <li><div><b>A written plan.</b><p>What was decided and why, in plain words, sent to you and, with your consent, your GP.</p></div></li>
+          </ol>
+          <p class="demo-note"><b>Demonstration: nothing was sent.</b> Your details did not leave this browser and were not stored. On the live site this request goes to the clinic's team.</p>
+          <div class="acts">
+            <a class="btn solid" href="experience.html">Back to the home page <span class="arr">→</span></a>
+            <button class="btn line" type="button" id="again">Start a new request</button>
+          </div>
+        </section>
+      </div>
+
+      <aside class="side-col" aria-label="About the consultation">
+        <div>
+          <p class="label">What happens</p>
+          <ol class="steps v">
+            <li><span class="num">I</span><h3>You get in touch.</h3><p>By phone or the form. We ask a few questions to make sure we are the right clinic for you.</p></li>
+            <li><span class="num">II</span><h3>The consultation.</h3><p>With a specialist. Your history, what you have tried, what you want to change.</p></li>
+            <li><span class="num">III</span><h3>A written plan.</h3><p>What was decided and why, in plain words, sent to you and, with your consent, your GP.</p></li>
+            <li><span class="num">IV</span><h3>Follow-up.</h3><p>Reviewed at {{REVIEW_INTERVAL}}. Adjusted if it needs to be. Stopped if it should be.</p></li>
+          </ol>
+        </div>
+        <div class="fee">
+          <p class="label">Fees</p>
+          <p>The initial consultation is <b>{{CONSULT_FEE}}</b>. Every fee is listed in full before you book. <a href="fees.html">See all fees</a></p>
+        </div>
+        <p class="only">Prescribed only after a consultation with a specialist. Nothing is sold over the counter.</p>
+      </aside>
+    </div>
+  </div>
+</main>
+
+<footer class="foot slim">
+  <p class="word" aria-hidden="true">CLOUD NINE</p>
+  <div class="wrap legal">
+    <p>Cloud Nine Clinical Ltd · Company No. {{COMPANY_NO}} · Registered office {{REG_OFFICE}} · CQC {{CQC_NUMBER}}</p>
+    <nav aria-label="Policies"><a href="privacy.html">Privacy</a><a href="complaints.html">Complaints</a><a href="fees.html">Fees</a><a href="accessibility.html">Accessibility</a></nav>
+  </div>
+</footer>
+
+<script src="assets/forms.js?v=1"></script>
+<script>
+(function () {
+  'use strict';
+  const $ = s => document.getElementById(s);
+  const form = $('form'), done = $('done'), about = $('f-about'), count = $('about-count');
+  const MAX = 500;
+  const checked = name => form.querySelector('input[name="' + name + '"]:checked');
+
+  // "Request a call" links arrive with ?by=phone: start with phone chosen
+  const by = new URLSearchParams(location.search).get('by');
+  if (by === 'phone' || by === 'email') $('f-contact-' + by).checked = true;
+
+  // the character count, said politely and only when it changes band
+  let lastBand = '';
+  function syncCount() {
+    const left = MAX - about.value.length;
+    const text = left === MAX ? 'You can enter up to ' + MAX + ' characters' : 'You have ' + left + ' character' + (left === 1 ? '' : 's') + ' remaining';
+    count.textContent = text;
+    const band = left > 50 ? 'ok' : left > 0 ? 'low' : 'none';
+    count.setAttribute('aria-live', band !== lastBand ? 'polite' : 'off'); lastBand = band;
+  }
+  about.addEventListener('input', syncCount);
+
+  const rules = [
+    { name: 'name', focus: 'f-name', check: () => {
+        const v = $('f-name').value.trim();
+        return !v ? 'Enter your full name' : v.length < 2 ? 'Full name must be 2 characters or more' : ''; } },
+    { name: 'email', focus: 'f-email', check: () => {
+        const v = $('f-email').value.trim();
+        return !v ? 'Enter your email address' : !C9Form.isEmail(v) ? 'Enter an email address in the correct format, like name@example.com' : ''; } },
+    { name: 'phone', focus: 'f-phone', check: () => {
+        const v = $('f-phone').value.trim();
+        return !v ? 'Enter a phone number' : !C9Form.isUKPhone(v) ? 'Enter a UK phone number, like 01632 960 001 or 07700 900 982' : ''; } },
+    { name: 'contact', focus: 'f-contact-phone', check: () => checked('contact') ? '' : 'Choose whether we should contact you by phone or email' },
+    { name: 'time', focus: 'f-time', check: () => '' },
+    { name: 'about', focus: 'f-about', check: () => about.value.length > MAX ? 'What you would like to talk about must be ' + MAX + ' characters or fewer' : '' },
+    { name: 'gp', focus: 'f-gp-yes', check: () => checked('gp') ? '' : 'Select yes, no or not sure' },
+    { name: 'consent', focus: 'f-consent', check: () => $('f-consent').checked ? '' : 'Confirm you agree to us contacting you about this request' }
+  ];
+
+  const TIMES = { any: 'at any time in opening hours', morning: 'in the morning', afternoon: 'in the afternoon', evening: 'in the early evening' };
+  const handle = C9Form.attach(form, rules, data => {
+    // nothing is sent: the details are read once, to word the confirmation, and then dropped
+    const first = String(data.get('name')).trim().split(/\s+/)[0];
+    const byPhone = data.get('contact') === 'phone';
+    $('done-h').textContent = 'Thank you, ' + first + '.';
+    $('done-contact').textContent = byPhone
+      ? 'A member of the clinical team calls you within {{RESPONSE_TIME}}.'
+      : 'A member of the clinical team emails you within {{RESPONSE_TIME}}.';
+    $('done-how').textContent = byPhone
+      ? 'On ' + String(data.get('phone')).trim() + ', ' + TIMES[data.get('time')] + '. If we miss you, we leave a message and try again.'
+      : 'At ' + String(data.get('email')).trim() + '. If you would rather talk, reply with a number and a good time to call.';
+    form.hidden = true; done.hidden = false;
+    document.title = 'Request received — Cloud Nine Clinical';
+    done.scrollIntoView({ block: 'start' });
+    done.focus({ preventScroll: true });
+  });
+
+  $('again').addEventListener('click', () => {
+    handle.reset(); syncCount();
+    document.title = 'Request a consultation — Cloud Nine Clinical';
+    done.hidden = true; form.hidden = false;
+    $('f-name').focus();
+  });
+})();
+</script>
+</body>
+</html>

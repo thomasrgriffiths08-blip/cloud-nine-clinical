@@ -239,7 +239,7 @@ section.sect { padding-block: var(--sect); }
                     flex-direction: column; justify-content: space-between; gap: 18px; }
 .titleblock > div:last-child { border-right: 0; }
 .titleblock dt { margin: 0; }
-.titleblock dd { margin: 0; font: 450 17px/1.25 var(--sans); font-stretch: 104%; }
+.titleblock dd { margin: 0; font: 450 17px/1.25 var(--sans); font-stretch: 104%; overflow-wrap: anywhere; }  /* a long placeholder may break at phone width */
 .titleblock .cqc { background: color-mix(in srgb, var(--stone) 38%, var(--overcast)); }
 .titleblock .cqc dd { font: 400 13px/1.45 var(--sans); color: var(--ink-soft); }
 @media (max-width: 900px) {

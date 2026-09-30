@@ -93,7 +93,7 @@
     };
     self.walkPx = () => walkPx;
     // for tests: is the frame under the playhead decoded, and which set is in use
-    self.debug = () => ({ set, path: vid ? 'hardware ' + vid.cfg.codec : 'avif', want: frameAt(cur), shown: shownF, bitmaps: bitmaps.size, loaded, count, dpr: DPR });
+    self.debug = () => ({ set, path: vid ? 'hardware ' + vid.v.w + 'x' + vid.v.h : 'avif', gpu: gpuName(), want: frameAt(cur), shown: shownF, bitmaps: bitmaps.size, loaded, count, dpr: DPR });
     self.manifest = () => m;
     // jump the playhead without scrolling (console / tests); decodes the window around it first
     self.seek = u => { target = cur = clamp(u, 0, 1); if (mode === 'frames') manageWindow(Math.round(frameAt(cur))); self.redraw(); };
@@ -244,7 +244,7 @@
       }
       if (mode === 'frames') manageWindow(Math.round(f));
       const key = Math.round(f * 1000) + ':' + Math.round(px * 1000) + ':' + Math.round(py * 1000);
-      if (dirty || key !== shown) { if (draw(f)) { shown = key; shownF = f; dirty = false; } }
+      if (dirty || key !== shown) { const moving = key !== shown; if (draw(f)) { shown = key; shownF = f; dirty = false; if (moving) watchFrame(dt); } }
       o.onProgress && o.onProgress(cur);
       requestAnimationFrame(tick);
     }
@@ -288,6 +288,23 @@
       }))).then(imgs => { stills = imgs.filter(Boolean); if (stills.length < 3) stills = [stills[0], stills[0], stills[0]].filter(Boolean); });
     }
 
+    function gpuName() {
+      try {
+        const gl = document.createElement('canvas').getContext('webgl');
+        const ext = gl && gl.getExtension('WEBGL_debug_renderer_info');
+        return ext ? String(gl.getParameter(ext.UNMASKED_RENDERER_WEBGL)) : '';
+      } catch (e) { return ''; }
+    }
+    // Safety net: if the picture can't keep up at this sharpness (1 in 6 of the last 90 moving frames
+    // missed 60 fps), drop to 1.5x for good. Never raises it again, so it can't oscillate.
+    let slow = [], lockedDPR = false;
+    function watchFrame(dt) {
+      if (lockedDPR || T.dpr || DPR <= 1.5) return;
+      slow.push(dt > 21 ? 1 : 0); if (slow.length > 90) slow.shift();
+      if (slow.length === 90 && slow.reduce((a, b) => a + b, 0) > 15) {
+        lockedDPR = true; DPR = Math.min(window.devicePixelRatio || 1, 1.5); resize();
+      }
+    }
     async function videoConfig(v) {
       const description = Uint8Array.from(atob(v.avcc), c => c.charCodeAt(0));
       for (const codec of [v.codec, v.codec.slice(0, 7) + '00' + v.codec.slice(9)]) {
@@ -342,8 +359,19 @@
       const cw = innerWidth * DPR;
       set = T.set || (cw <= 1100 ? 'm' : (cw > 1700 && m.sizes && m.sizes.h ? 'h' : 'd'));
       if (mode === 'frames' && m.video && T.codec !== '0' && window.VideoDecoder && window.EncodedVideoChunk) {
-        const v = set === 'm' ? m.video.sd : m.video.hd, cfg = await videoConfig(v);
-        if (cfg) vid = { v, cfg };   // measured on an Intel Iris laptop: DPR 2 drops to 43 fps, 1.5 holds 60
+        // the sharpest file the machine can play smoothly: 960 for phones; 2560 for a canvas wider than
+        // 2000 device pixels on Apple silicon; otherwise 1920
+        // (measured: Intel Iris Plus plays 1920 at 60 fps but 2560 at 33, so 2560 is for Apple silicon only)
+        const apple = /Apple (M\d|GPU)/.test(gpuName());
+        const wide = innerWidth * Math.min(window.devicePixelRatio || 1, 2) > 2000;
+        const v = (T.vid && m.video[T.vid]) || (set === 'm' ? m.video.sd : (wide && apple && m.video.qhd ? m.video.qhd : m.video.hd));
+        const cfg = await videoConfig(v);
+        if (cfg) {
+          vid = { v, cfg };
+          // Full Retina (2x) where the GPU can hold 60 fps with it — Apple silicon; 1.5x elsewhere.
+          // Measured on an Intel Iris Plus laptop: 2x drops to 43 fps, 1.5x holds 60.
+          if (!T.dpr && apple) DPR = Math.min(window.devicePixelRatio || 1, 2);
+        }
       }
       if (mode === 'frames' && !vid && !(await supportsAvif())) mode = 'stills';
       layout();

@@ -11,6 +11,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,300..600&family=Fragment+Mono&display=swap">
 <link rel="stylesheet" href="assets/site.css?v=20260929g">
 <link rel="stylesheet" href="assets/products/products.css?v=2">
+<link rel="stylesheet" href="assets/pages.css?v=1">
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -18,8 +19,9 @@
   <a class="mark" href="experience.html" aria-label="Cloud Nine Clinical, home">CLOUD NINE<span>Clinical</span></a>
   <nav aria-label="Main">
     <a class="hide-sm" href="experience.html#counter">The counter</a>
-    <a href="cultivars.html"><span class="long">All cultivars</span><span class="short">All</span></a>
-    <a class="btn" href="{{BOOKING_URL}}"><span class="long">Request a consultation</span><span class="short">Enquire</span></a>
+    <a class="hide-sm" href="cultivars.html">All cultivars</a>
+    <a href="patients.html"><span class="long">Patient sign-in</span><span class="short">Sign in</span></a>
+    <a class="btn" href="consultation.html"><span class="long">Request a consultation</span><span class="short">Enquire</span></a>
   </nav>
 </header>
 
@@ -55,7 +57,7 @@
       <p class="notes" id="notes"></p>
       <p class="stock" id="stock"></p>
       <div class="act">
-        <a class="btn solid" href="{{BOOKING_URL}}">Discuss it at your consultation <span class="arr">→</span></a>
+        <a class="btn solid" href="consultation.html">Discuss it at your consultation <span class="arr">→</span></a>
         <small>Dispensed only against a prescription written for you after a consultation. Nothing here is sold over the counter.</small>
       </div>
       <div class="shelf">
@@ -71,6 +73,14 @@
     <p style="margin-top:18px"><a class="btn solid" href="cultivars.html">See all cultivars <span class="arr">→</span></a></p>
   </section>
 </main>
+
+<footer class="foot slim">
+  <p class="word" aria-hidden="true">CLOUD NINE</p>
+  <div class="wrap legal">
+    <p>Cloud Nine Clinical Ltd · Company No. {{COMPANY_NO}} · Registered office {{REG_OFFICE}} · CQC {{CQC_NUMBER}}</p>
+    <nav aria-label="Policies"><a href="privacy.html">Privacy</a><a href="complaints.html">Complaints</a><a href="fees.html">Fees</a><a href="accessibility.html">Accessibility</a></nav>
+  </div>
+</footer>
 
 <script src="assets/products/products.js?v=2"></script>
 <script>

@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fees — Cloud Nine Clinical</title>
+<meta name="description" content="Every fee at Cloud Nine Clinical, listed in full before you book: consultations, repeat prescriptions, letters and cancellations.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#16181A">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,300..600&family=Fragment+Mono&display=swap">
+<link rel="stylesheet" href="assets/site.css?v=20260929l">
+<link rel="stylesheet" href="assets/products/products.css?v=2">
+<link rel="stylesheet" href="assets/pages.css?v=1">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="bar solid">
+  <a class="mark" href="experience.html" aria-label="Cloud Nine Clinical, home">CLOUD NINE<span>Clinical</span></a>
+  <nav aria-label="Main">
+    <a class="hide-sm" href="experience.html#counter">The counter</a>
+    <a class="hide-sm" href="cultivars.html">All cultivars</a>
+    <a href="patients.html"><span class="long">Patient sign-in</span><span class="short">Sign in</span></a>
+    <a class="btn" href="consultation.html"><span class="long">Request a consultation</span><span class="short">Enquire</span></a>
+  </nav>
+</header>
+
+<main class="pg" id="main">
+  <div class="wrap">
+    <div class="ix-head">
+      <div>
+        <p class="crumbs"><a href="experience.html">Home</a><span>/</span><span>Fees</span></p>
+        <h1 class="d-l">Every fee, in full.</h1>
+      </div>
+      <p>What each part of your care costs, listed before you book. There is nothing to buy on the day, and no fee is added afterwards that is not on this page.</p>
+    </div>
+
+    <div class="doc">
+      <nav class="toc" aria-label="On this page">
+        <p class="label">On this page</p>
+        <ol>
+          <li><a href="#consultations"><span>A</span>Consultations</a></li>
+          <li><a href="#prescriptions"><span>B</span>Prescriptions</a></li>
+          <li><a href="#letters"><span>C</span>Letters and records</a></li>
+          <li><a href="#cancellations"><span>D</span>Changing or cancelling</a></li>
+          <li><a href="#paying"><span>E</span>Paying</a></li>
+          <li><a href="#questions"><span>F</span>Questions about a fee</a></li>
+        </ol>
+        <p class="aside">Where a line shows a bracketed field, it is waiting for the clinic's own figure.</p>
+        <a class="btn solid" href="consultation.html">Request a consultation <span class="arr">→</span></a>
+      </nav>
+
+      <article class="prose">
+        <section id="consultations" aria-labelledby="consultations-h">
+          <p class="k">A</p>
+          <h2 id="consultations-h">Consultations</h2>
+          <table class="fees">
+            <thead><tr><th scope="col">Service</th><th scope="col">Fee</th></tr></thead>
+            <tbody>
+              <tr><td><b>The eligibility call</b><small>Before you book, to check we are the right clinic for you.</small></td><td>No charge</td></tr>
+              <tr><td><b>Initial consultation</b><small>With a specialist clinician, usually {{FIRST_APPT_LENGTH}}. Includes your written plan.</small></td><td>{{CONSULT_FEE}}</td></tr>
+              <tr><td><b>Follow-up consultation</b><small>A review with your clinician at {{REVIEW_INTERVAL}}, or sooner if you or they need it.</small></td><td>{{FOLLOW_UP_FEE}}</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="prescriptions" aria-labelledby="prescriptions-h">
+          <p class="k">B</p>
+          <h2 id="prescriptions-h">Prescriptions</h2>
+          <table class="fees">
+            <thead><tr><th scope="col">Service</th><th scope="col">Fee</th></tr></thead>
+            <tbody>
+              <tr><td><b>Repeat prescription</b><small>Reviewed by your clinician before it is issued, between consultations.</small></td><td>{{REPEAT_RX_FEE}}</td></tr>
+              <tr><td><b>Any prescribed treatment</b><small>Not charged by the clinic. Priced by the dispensing pharmacy and confirmed with you in writing before anything is dispensed.</small></td><td>Separate</td></tr>
+            </tbody>
+          </table>
+          <p>A prescription is written only after a consultation, and only where a clinician judges it appropriate for you. Paying for a consultation does not mean a prescription will follow.</p>
+        </section>
+
+        <section id="letters" aria-labelledby="letters-h">
+          <p class="k">C</p>
+          <h2 id="letters-h">Letters and records</h2>
+          <table class="fees">
+            <thead><tr><th scope="col">Service</th><th scope="col">Fee</th></tr></thead>
+            <tbody>
+              <tr><td><b>Your written plan, and a letter to your GP</b><small>After each consultation. The letter goes to your GP only with your consent.</small></td><td>Included</td></tr>
+              <tr><td><b>A copy of your records</b><small>Your right under UK data protection law. See the <a href="privacy.html#rights">privacy notice</a>.</small></td><td>No charge</td></tr>
+              <tr><td><b>Other letters</b><small>For example, for an employer or for travel, written by your clinician on request.</small></td><td>{{LETTER_FEE}}</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="cancellations" aria-labelledby="cancellations-h">
+          <p class="k">D</p>
+          <h2 id="cancellations-h">Changing or cancelling</h2>
+          <table class="fees">
+            <thead><tr><th scope="col">Service</th><th scope="col">Fee</th></tr></thead>
+            <tbody>
+              <tr><td><b>Changing or cancelling with notice</b><small>At least {{NOTICE_PERIOD}} before your appointment.</small></td><td>No charge</td></tr>
+              <tr><td><b>Late cancellation or a missed appointment</b><small>Less than {{NOTICE_PERIOD}} notice. If something unavoidable happened, tell us: we will listen.</small></td><td>{{LATE_CANCEL_FEE}}</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="paying" aria-labelledby="paying-h">
+          <p class="k">E</p>
+          <h2 id="paying-h">Paying</h2>
+          <p>Fees are paid {{PAYMENT_TIMING}}, by {{PAYMENT_METHODS}}. You get a receipt by email for every payment.</p>
+          <p>We are a private clinic, so consultations are not funded by the NHS. If you have private medical insurance, ask your insurer before you book whether it covers a consultation with us.</p>
+          <p class="small">Fees include VAT where VAT applies. Last reviewed {{FEES_UPDATED}}.</p>
+        </section>
+
+        <section id="questions" aria-labelledby="questions-h">
+          <p class="k">F</p>
+          <h2 id="questions-h">Questions about a fee</h2>
+          <p>Ask before you book, on {{PHONE}} or at {{EMAIL}}. If you think you have been charged wrongly, tell us and we will look into it. You can also use our <a href="complaints.html">complaints procedure</a>.</p>
+        </section>
+      </article>
+    </div>
+  </div>
+</main>
+
+<footer class="foot slim">
+  <p class="word" aria-hidden="true">CLOUD NINE</p>
+  <div class="wrap legal">
+    <p>Cloud Nine Clinical Ltd · Company No. {{COMPANY_NO}} · Registered office {{REG_OFFICE}} · CQC {{CQC_NUMBER}}</p>
+    <nav aria-label="Policies"><a href="privacy.html">Privacy</a><a href="complaints.html">Complaints</a><a href="fees.html" aria-current="page">Fees</a><a href="accessibility.html">Accessibility</a></nav>
+  </div>
+</footer>
+</body>
+</html>
